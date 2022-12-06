@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Ignore .venv
 .venv
+
+# Ignore python cache
+*.__pycache__
