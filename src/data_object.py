@@ -1,5 +1,5 @@
-from .abc_data_object import ABCDataObject
-from .exceptions.data_object_already_exists import DataObjectAlreadyExists
+from abc_data_object import ABCDataObject
+from exceptions.data_object_already_exists import DataObjectAlreadyExists
 
 class DataObject(ABCDataObject):
 
