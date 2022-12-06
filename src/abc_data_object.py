@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
 
-class ABCDataObject(abc):
+
+class ABCDataObject(ABC):
     
     _identifier: str
     _path: str
