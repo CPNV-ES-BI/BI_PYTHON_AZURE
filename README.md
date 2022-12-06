@@ -5,7 +5,7 @@
 
 # BI - DataObject
 
-# Table of Contents
+## Table of Contents
 1. [Setting up dev](#setting-up-dev)
     1. [About my development environment](#about-my-development-environment)
     2. [Requirements](#requirements)
@@ -38,7 +38,7 @@ cd BI_PYTHON_AZURE/
 
 ### Configuration 
 
-> Make sure to add the path to the `src` directory to your `PYTHONPATH`:
+> Make sure to add the full path to the `src` directory to your `PYTHONPATH`:
 
 ```sh
 export PYTHONPATH="${PYTHONPATH}:/home/example/BI_PYTHON_AZURE/src/"
@@ -55,14 +55,14 @@ The framework for running unit tests is [unittests](https://docs.python.org/3.10
 python3 -m unittest discover tests/
 ```
 
-You can also run a signle test this with the following command example:
+You can also run a single test this with the following command example:
 ```sh
 python3 tests/test_data_object.py TestDataObject.test_create_object_path_not_exists_object_exists
 ```
 
 #### Run all tests
 
-Execute the shell script `run_unitsts.sh`
+Execute the shell script `run_unittests.sh`
 
 ```sh
 ./run_unittests.sh
