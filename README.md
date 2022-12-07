@@ -6,15 +6,20 @@
 # BI - DataObject
 
 ## Table of Contents
-1. [Setting up dev](#setting-up-dev)
+1. [Documentation](#documentation)
+2. [Setting up dev](#setting-up-dev)
     1. [About my development environment](#about-my-development-environment)
     2. [Requirements](#requirements)
     3. [Clone repository](#clone-repository)
     4. [Configuration](#configuration)
     5. [Run unittests](#run-unittests)
-2. [Docker](#docker)
+3. [Docker](#docker)
     1. [Run](#run)
-3. [Contributing](#contributing)
+4. [Contributing](#contributing)
+
+## Documentation
+
+The official documentation can be found [here](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki).
 
 ## Setting up dev
 
@@ -34,6 +39,7 @@
 ```sh
 git clone git@github.com:CPNV-ES-BI/BI_PYTHON_AZURE.git
 cd BI_PYTHON_AZURE/
+git checkout develop
 ```
 
 ### Configuration 
