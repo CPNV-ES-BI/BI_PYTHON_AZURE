@@ -16,15 +16,18 @@ class AzureConfig:
     __container_name: str
     
     def __init__(self) -> None:
+        """Constructor
+
+        Raises:
+            ValueError: if the connection string or the container name env variable
+            are not set.
+
         """
-        
-        """
-        self._connection_string = os.environ["AZURE_STORAGE_CONNECTION_STRING"]
-        self._container_name = os.environ["AZURE_CONTAINER_NAME"]
+        self._set_connection_string(os.environ["AZURE_STORAGE_CONNECTION_STRING"])
+        self._set_container_name(os.environ["AZURE_CONTAINER_NAME"])
 
     # Protected setter
-    @__connection_string.setter
-    def _connection_string(self, connection_string: str):
+    def _set_connection_string(self, connection_string: str):
         if not connection_string:
             raise ValueError("Connection string is empty.")
         self.__connection_string = connection_string
@@ -34,8 +37,7 @@ class AzureConfig:
         return self.__connection_string
 
     # Protected setter
-    @__container_name.setter
-    def _container_name(self, container_name: str):
+    def _set_container_name(self, container_name: str):
         if not container_name:
             raise ValueError("Container name is empty.")
         self.__container_name = container_name
