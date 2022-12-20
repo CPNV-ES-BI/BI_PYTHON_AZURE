@@ -1,6 +1,7 @@
 @startuml
 
 skinparam legendBackgroundColor #fff8db
+skinparam classAttributeIconSize 0
 
 legend top right
     Project   BI_PYTHON_AZURE
@@ -11,8 +12,8 @@ endlegend
 title Class Diagram
 
 Interface IDataObject {
-  +{static} Bool doesExist(string identifier)
-  +{static} DataObject createObject(identifier: string, path: string)
+  +{static} Bool does_exist(string identifier)
+  +{static} DataObject create_object(identifier: string, path: string)
   +{static} DataObject download_object(identifier: string)
   +{static} void publish_object(identifier: string)
 }

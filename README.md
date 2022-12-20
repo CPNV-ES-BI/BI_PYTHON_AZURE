@@ -39,10 +39,17 @@ The official documentation can be found [here](https://github.com/CPNV-ES-BI/BI_
 ```sh
 git clone git@github.com:CPNV-ES-BI/BI_PYTHON_AZURE.git
 cd BI_PYTHON_AZURE/
+
+//TODO REVIEW Consider using switch instead of checkout
 git checkout develop
 ```
 
+//TODO REVIEW missing pip command to retrieve dependencies
+//TODO REVIEW pip freeze > requirements.txt should be used to generate requirement file https://learnpython.com/blog/python-requirements-file/
+
 ### Configuration 
+
+//TODO REVIEW how to set cloud provider credentials ?
 
 > Make sure to add the full path to the `src` directory to your `PYTHONPATH`:
 
@@ -102,6 +109,53 @@ If you have a suggestion that would make this better, please fork the repo and c
 3. Commit your Changes (git commit -m 'Add some AmazingFeature')
 4. Push to the Branch (git push origin feature/AmazingFeature)
 5. Open a Pull Request
+
+## Code folder structure
+
+//TODO REVIEW tree /f - add comment to explain the content of each folder
+
+C:.
+│   .gitignore
+│   Dockerfile
+│   LICENSE
+│   README.md
+│   requirements.txt
+│   run_unittests.sh
+│
+├───.idea
+│   │   .gitignore
+│   │   BI.iml
+│   │   misc.xml
+│   │   modules.xml
+│   │   vcs.xml
+│   │   workspace.xml
+│   │
+│   └───inspectionProfiles
+│           profiles_settings.xml
+│
+├───doc
+│       class_diagram.png
+│       class_diagram.puml
+│
+├───src
+│   │   abc_data_object.py
+│   │   app.py
+│   │   blob_client.py
+│   │   data_object.py
+│   │   __init__.py
+│   │
+│   └───exceptions
+│           data_object_already_exists.py
+│           data_object_does_not_exist.py
+│           data_object_exception.py
+│           __init__.py
+│
+└───tests
+    │   test_data_object.py
+    │
+    └───__pycache__
+            test_data_object.cpython-310.pyc
+
 
 ## Licence
 
