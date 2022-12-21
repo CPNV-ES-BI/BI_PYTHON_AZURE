@@ -402,3 +402,8 @@ FodyWeavers.xsd
 
 # Ignore python cache
 *.__pycache__
+
+# Ignore private config file
+azure_config.json
+
+run_tests.sh
