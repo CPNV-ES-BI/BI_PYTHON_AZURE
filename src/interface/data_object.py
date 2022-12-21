@@ -18,7 +18,7 @@ class DataObject:
         """Check if the data object exists in the distant storage"""
         raise NotImplementedError("Not implemented!")
 
-    def create(self, object_path: str, local_file_path: str) -> object:
+    def create(self, object_path: str, local_file_path: str) -> None:
         """Create the data object in the distant storage
 
         Args:
@@ -38,12 +38,14 @@ class DataObject:
         """
         raise NotImplementedError("Not implemented!")
 
-    def download(self, object_path: str, filepath: str) -> None:
+    def download(self, object_path: str) -> str:
         """Download the file from the distant data object through its name
 
         Args:
             object_path: str       Data object name (file.extension)
-            local_file_path: str   Local path (path + file.extension)
+
+        Returns: 
+            Path to the downloaded object 
 
         Raises: 
             Exception the data object name does not exists
