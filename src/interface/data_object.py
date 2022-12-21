@@ -32,8 +32,7 @@ class DataObject:
             Exception: if the object already exists in distant storage
         
         Notes: 
-            If the local_file_path does not exists, it creates the data object anyway.
-            It will upload an empty file with the object name as name file.
+            If the local_file_path does not exists, it creates the structure anyway.
         """
         raise NotImplementedError("Not implemented!")
 
@@ -50,8 +49,8 @@ class DataObject:
         """
         raise NotImplementedError("Not implemented!")
 
-    def publish(self, object_name: str, local_file_path: str) -> None:
-        """Publish the file to the distant data object through its name
+    def publish(self, object_name: str) -> None:
+        """Set the data_object public
 
         Args:
             object_name: str       Data object name (file.extension)
@@ -62,4 +61,3 @@ class DataObject:
         
         """
         raise NotImplementedError("Not implemented!")
-
