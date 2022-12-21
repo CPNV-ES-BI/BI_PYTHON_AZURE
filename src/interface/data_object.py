@@ -14,15 +14,17 @@ class DataObject:
     All methods must be implemented in inheriting class.
     """
 
-    def does_exist(self, object_name: str) -> bool:
+    def does_exist(self, object_path: str) -> bool:
         """Check if the data object exists in the distant storage"""
         raise NotImplementedError("Not implemented!")
 
-    def create(self, object_name: str, local_file_path: str) -> object:
+    def create(self, object_path: str, local_file_path: str) -> object:
         """Create the data object in the distant storage
 
         Args:
-            object_name: str       Data object name (file.extension)
+            object_path: str       Path to the object in the distant storage
+                                   Ex: `subdir1/subdir2/myfile.txt" 
+
             local_file_path: str   Local path (path + file.extension)
 
         Returns:
@@ -36,11 +38,11 @@ class DataObject:
         """
         raise NotImplementedError("Not implemented!")
 
-    def download(self, data_object_name: str, filepath: str) -> None:
+    def download(self, object_path: str, filepath: str) -> None:
         """Download the file from the distant data object through its name
 
         Args:
-            object_name: str       Data object name (file.extension)
+            object_path: str       Data object name (file.extension)
             local_file_path: str   Local path (path + file.extension)
 
         Raises: 
@@ -49,11 +51,11 @@ class DataObject:
         """
         raise NotImplementedError("Not implemented!")
 
-    def publish(self, object_name: str) -> None:
+    def publish(self, object_path: str) -> None:
         """Set the data_object public
 
         Args:
-            object_name: str       Data object name (file.extension)
+            object_path: str       Data object name (file.extension)
             local_file_path: str   Local path (path + file.extension)
 
         Raises: 
