@@ -3,6 +3,7 @@
 # Author :   Mélodie Ohan
 # Version:   20-12-2022 - original (dedicated to BI1)
 # Remarks:   -
+#            TODO get BlobServiceClient for container
 # -----------------------------------------------------------------------------------
 
 from azure.storage.blob import BlobServiceClient
@@ -46,3 +47,4 @@ class Client:
         """
         client: Client = Client()
         return client._service_client.get_container_client(client._config.container_name)
+
