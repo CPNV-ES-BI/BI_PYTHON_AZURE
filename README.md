@@ -39,7 +39,7 @@ The official documentation can be found [here](https://github.com/CPNV-ES-BI/BI_
 ```sh
 git clone git@github.com:CPNV-ES-BI/BI_PYTHON_AZURE.git
 cd BI_PYTHON_AZURE/
-git checkout develop
+git switch develop
 ```
 
 ### Configuration 
@@ -102,6 +102,39 @@ If you have a suggestion that would make this better, please fork the repo and c
 3. Commit your Changes (git commit -m 'Add some AmazingFeature')
 4. Push to the Branch (git push origin feature/AmazingFeature)
 5. Open a Pull Request
+
+## Code Folder structure
+
+> The `tests` directory must have the same structure as the objects tested in `src`
+
+```sh
+├── doc                                   # Documentation directory
+│   ├── class_diagram.png
+│   └── class_diagram.puml
+├── Dockerfile
+├── example.run_tests.sh                            
+├── LICENSE
+├── README.md
+├── requirements.txt
+├── run_tests.sh
+├── src                                   # Project directory
+│   ├── app.py
+│   ├── blob                              # Blob DataObject directory
+│   │   ├── blob_helper.py
+│   │   ├── __init__.py
+│   ├── config                            # Azure credentials configuration directory
+│   │   ├── azure_config.py                       # Where the env variables are retrieved
+│   │   ├── client.py                              # Provides the required clients to DataObjects
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── interface                         # Where interfaces are defined
+│       ├── data_object.py                              
+│       └── __init__.py
+└── tests                                 # Tests directory
+    └── blob
+        └── test_blob_helper.py
+
+``` 
 
 ## Licence
 
