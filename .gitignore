@@ -406,4 +406,4 @@ FodyWeavers.xsd
 # Ignore private config file
 azure_config.json
 
-run_tests.sh
+env.variables.sh
