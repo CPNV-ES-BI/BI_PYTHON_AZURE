@@ -75,6 +75,8 @@ pip install -r requirements.txt
 
 ### Configuration 
 
+> Make sure to add the full path to the `src` directory to your `PYTHONPATH`:
+
 1. Rename `.env.variables.sh` to `env.variables.sh`
 ```sh
 mv .env.variables.sh env.variables.sh
