@@ -6,16 +6,16 @@ skinparam classAttributeIconSize 0
 legend top right
     Project   BI_PYTHON_AZURE
     Author    Mélodie Ohan
-    Version   06-12-2022
+    Version   21-12-2022
 endlegend
 
 title Class Diagram
 
 Interface IDataObject {
-  +{static} Bool does_exist(string identifier)
-  +{static} DataObject create_object(identifier: string, path: string)
-  +{static} DataObject download_object(identifier: string)
-  +{static} void publish_object(identifier: string)
+  + Bool doesExist(objectPath: string)
+  + void create(objectPath: string, localFilePath: string)
+  + string download(objectPath: string)
+  + void publish(objectPath: string)
 }
 
 Class DataObject
