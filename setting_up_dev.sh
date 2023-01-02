@@ -15,8 +15,8 @@ echo "Adding \`src\` directory to the PYTHONPATH.."
 export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/src/"
 
 # Copy the env variables file
-echo "Create the configuration file.."
-cp .env.variables.sh env.variables.sh
+echo "Create the configuration file if it does not exist.."
+cp -n .env.variables.sh env.variables.sh
 chmod +x env.variables.sh
 
 # Export the environment variables
