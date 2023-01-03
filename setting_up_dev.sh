@@ -18,6 +18,7 @@ export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/src/"
 echo "Create the configuration file if it does not exist.."
 cp -n .env.variables.sh env.variables.sh
 chmod +x env.variables.sh
+source env.variables.sh
 
 # Export the environment variables
 export VIRTUAL_ENV_DISABLE_PROMPT=0
