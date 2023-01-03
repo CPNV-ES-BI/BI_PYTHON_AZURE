@@ -34,4 +34,4 @@ class StorageClient:
         return self._service_client.get_container_client(container_name)
 
     def get_blob_client(self, container_name: str, blob_name: str) -> BlobClient:
-        return self.get_blob_client(container=container_name, blob=blob_name)    
+        return self._service_client.get_blob_client(container_name, blob_name)    
