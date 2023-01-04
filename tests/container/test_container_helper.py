@@ -1,8 +1,4 @@
 import unittest
-import os
-import tempfile
-import shutil
-import os
 import uuid
 
 from config.storage_client import StorageClient
@@ -66,6 +62,31 @@ class TestContainerHelper(unittest.TestCase):
         # then  
         self.assertEqual(self._container_helper.does_exist(self._container_name), True)
     
+    def test_create_object_already_exists_throw_exception(self):
+        # given
+        # refer to setUpClass and setUp()
+
+        # when
+        # then
+        with self.assertRaises(Exception):
+            self._container_helper.create(self._container_name)
+
+    def test_download_object_nominal_case_downloaded(self):
+        # given
+        # refer to setUpClass and setUp()
+
+        # when
+        # then
+        pass
+
+    def test_download_object_not_exists_throw_exception(self):
+        # given
+        # refer to setUpClass and setUp()
+        pass
+        # when
+        # then
+        pass
+
     # depends on test_does_exist_not_exists_success
     def test_delete_object_object_exists_object_deleted(self):
         # given
@@ -77,6 +98,15 @@ class TestContainerHelper(unittest.TestCase):
         # then
         self.assertEqual(self._container_helper.does_exist(self._container_name), False)
 
+    def test_delete_object_object_doesnt_exist_throw_exception(self):
+        # given
+        # refer to setUp()
+        container_name = f"{str(uuid.uuid4())}"  
+
+        # when
+        # then
+        with self.assertRaises(Exception):
+            self._container_helper.delete(container_name)
 
 if __name__ == '__main__':
     unittest.main()
