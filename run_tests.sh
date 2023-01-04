@@ -9,4 +9,5 @@ export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/src/"
 
 # Run any tests in `tests` directory
 echo "Running unit tests.."
-python3 -m unittest discover -s tests/blob
+python3 -m unittest discover -s tests/blob/
+python3 -m unittest discover -s tests/container/
