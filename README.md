@@ -15,9 +15,8 @@ For now, the features to be expected are the creation and deletion of a `blob` o
 2. [Setting up dev](#setting-up-dev)
     1. [Requirements](#requirements)
     2. [Clone repository](#clone-repository)
-    3. [Virtual environment](#virtual-environment)
-    4. [Packages installation](#packages-installation)
-    5. [Configuration](#configuration)
+    3. [Run the configuration script](#run-the-configuration-script)
+    4. [Manual configuration](#manual-configuration)
     6. [Run unittests](#run-unittests)
 3. [Docker](#docker)
     1. [Run](#run)
@@ -51,29 +50,47 @@ cd BI_PYTHON_AZURE/
 git switch develop
 ```
 
-### Virtual environment
+### Run the configuration script
+
+> Works on Linux/Unix like operating systems
+
+The following script will:
+- install the requirements in a virtual environment
+- copy the `.env.variables.sh `and name it `env.variables.sh`
+- add the `src` directory to your PYTHONPATH
+
+```shell
+source setting_up_dev.sh
+``` 
+Then just set your connection string in `env.variables.sh`.
+
+### Manual configuration
+
+####  Create the Virtual environment
 
 Create a Python virtual environment in `BI_PYTHON_AZURE/` 
 ```sh
-virtualenv --python=python3 env
+python3 -m venv .venv
 ```
 
+1. Activate virtual environment 
 Activate the newly created virtual environment:
 ```sh
- source env/bin/activate
+source .venv/bin/activate
 ```
+
 To deactivate an active virtual environment:
 ```sh
  deactivate
 ```
 
-### Packages installation
+#### Install the requirements
 
 ```sh
 pip install -r requirements.txt
 ```
 
-### Configuration 
+#### Set your connection string
 
 1. Rename `.env.variables.sh` to `env.variables.sh`
 ```sh
@@ -83,14 +100,16 @@ mv .env.variables.sh env.variables.sh
 
 3. [Run unittests](#run-unittests) to ensure that the environment is correctly installed.
 
-> If you want to run the project without any `run-*.sh` scripts,
-make sure to add the path to the `src` directory to your `PYTHONPATH`.
+
+#### Add SRC to your PYTHONPATH
 
 ```sh
 export PYTHONPATH="${PYTHONPATH}:/home/example/BI_PYTHON_AZURE/src/"
 ```
 
 ### Run Unittests
+
+> Make sure to 
 
 #### Run all tests
 
@@ -152,7 +171,7 @@ docker run python-docker
 │   │   ├── __init__.py
 │   ├── config                            # Azure credentials configuration directory
 │   │   ├── azure_config.py                       # Where the env variables are retrieved
-│   │   ├── client.py                              # Provides the required clients to DataObjects
+│   │   ├── client.py                             # Provides the required clients to DataObjects
 │   │   └── __init__.py
 │   ├── __init__.py
 │   ├── interface                         # Where interfaces are defined
