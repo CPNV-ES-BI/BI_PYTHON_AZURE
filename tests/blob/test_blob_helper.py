@@ -2,145 +2,183 @@ import unittest
 import os
 import tempfile
 import shutil
-import os
 import uuid
 
 from blob.blob_helper import BlobHelper
-from config.client import Client
+from config.storage_client import StorageClient
+from container.container_helper import ContainerHelper
 
 
 class TestBlobHelper(unittest.TestCase):
 
-    _blob_helper: BlobHelper
-    _tmp_dir: str
-    _file_path: str # file name + extension
+    _blob_helper: BlobHelper  
+    _blob_name: str
+
+    # start class attributes
+    _local_file_path: str       
     _object_path: str
+    _storage_client: StorageClient
+    _tmp_dir: str
+    _container_name: str
+    _container_helper: str
+    # end class attributes area
+
+    # -----------------------------------------------------------------------
+    # These methods create/delete the test environment 
+    # and depend on the TestContainerHelper successes
+    # Refer to:
+    # - test_create_object_nominal_case_object_exists()
+    # - test_delete_object_object_exists_object_deleted
+    # -----------------------------------------------------------------------
+    @classmethod
+    def _create_test_directory(cls):
+        """Create a tmp directory with a txt file"""
+        cls._tmp_dir = tempfile.mkdtemp()
+        file_name = f"{str(uuid.uuid4())}.txt" 
+        cls._local_file_path = os.path.join(cls._tmp_dir, file_name)
+        with open(cls._local_file_path, "w") as f: f.write("~")
+
+    @classmethod
+    def _delete_test_directory(cls):
+        """Delete the created tmp directory with its content"""
+        shutil.rmtree(cls._tmp_dir)
+
+    @classmethod
+    def _create_test_container(cls):
+        """Create a container with a random name"""
+        cls._container_name = f"{str(uuid.uuid4())}"
+        cls._container_helper = ContainerHelper(cls._storage_client)
+        cls._container_helper.create(cls._container_name)
+
+    @classmethod
+    def _delete_test_container(cls):
+        """Delete the created tmp directory with its content"""
+        cls._container_helper.delete(cls._container_name)
+    # -----------------------------------------------------------------------
 
     # Before all
     @classmethod
     def setUpClass(cls):
-        cls._blob_helper = BlobHelper(Client.get_container_client())
-        # Create and set tmp test directory
-        cls._tmp_dir = tempfile.mkdtemp()
-        # Create a file with a random name
-        file_name = f"{str(uuid.uuid4())}.txt" 
-        cls._file_path = os.path.join(cls._tmp_dir , file_name)
-        with open(cls._file_path, "w") as f: f.write("~")
-        # Define objet path
         cls._object_path = 'file.txt'
+        cls._storage_client = StorageClient()
+        cls._create_test_directory()
+        cls._create_test_container()
     
     # After all
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree(cls._tmp_dir)
+        cls._delete_test_container()
+        cls._delete_test_directory()
 
     # Before each
     def setUp(self):
-        pass
+        self._blob_helper = BlobHelper(TestBlobHelper._storage_client, TestBlobHelper._container_name)
+        self._blob_name = "TestBlobHelper/example.txt"
+        self._blob_helper.create(self._blob_name, TestBlobHelper._local_file_path)
     
     # After each 
     def tearDown(self):
-        # TODO Delete created object?
-        pass
-    
-    # depends on test_does_exist_exists_case_success
-    def test_create_object_nominal_case_object_exists(self):
-        # given
-        # refer to setUpClass
-        
-        # when
-        # Refer to setUp() (where the object must be created)
-
-        # then  
-        self.assertEqual(self._blob_helper.does_exist(TestBlobHelper._object_path), True)
-
-    
-    # depends on test_does_exist_not_exists_success
-    def test_create_object_already_exists_throw_exception(self):
-        # given
-        # refer to setUp (where the object is created)
-
-        # when
-        # then
-        with self.assertRaises(Exception):
-            self._blob_helper.create(
-                TestBlobHelper._object_path, 
-                TestBlobHelper._object_path)
-
-    # Depends on does_exist_exists_case_success
-    def test_create_object_path_not_exists_object_exists(self):
-        # given
-        # refer to setUpClass
-        object_path: str = f"{str(uuid.uuid4())}.txt" 
-        local_path: str = '/impossible/path/afile.txt'
-
-        # when
-        self._blob_helper.create(object_path, local_path)
-
-        # then
-        self.assertEqual(self._blob_helper.does_exist(object_path), True)
-
+        self._blob_helper.delete(self._blob_name)
     
     def test_does_exist_exists_case_success(self):
-        # given 
-        # refer to setUpClass
-        # Generate an impossible random file
-        blob_name: str = f"{str(uuid.uuid4())}.txt" 
+        # given         
+        # refer to setUpClass and setUp()
+                
+        # when
+        result: bool = self._blob_helper.does_exist(self._blob_name)
         
+        # then
+        self.assertEqual(result, True)
+
+    def test_does_exist_not_exists_success(self):
+        # given 
+        # refer to setUpClass and setUp()
+        blob_name: str =  f"{str(uuid.uuid4())}.txt" 
+
         # when
         result: bool = self._blob_helper.does_exist(blob_name)
         
         # then
         self.assertEqual(result, False)
+        pass
 
-    def test_does_exist_not_exists_success(self):
-        # given 
+    # depends on test_does_exist_exists_case_success
+    def test_create_object_nominal_case_object_exists(self):
+        # given
+        # when
         # refer to setUpClass and setUp()
-        
-        # when
-        result: bool = self._blob_helper.does_exist('existing_blob_name')
-        
-        # then
-        self.assertEqual(result, False)
-
-    def test_download_object_nominal_case_downloaded(self):
-        # given
-        # refer to setUpClass
-
-        # when
-        file_path: str = self._blob_helper.download(TestBlobHelper._object_path)
 
         # then
-        self.assertEqual(os.path.isfile(file_path), True)
+        object_exist: bool = self._blob_helper.does_exist(self._blob_name)  
+        self.assertEqual(object_exist, True)
 
-    def test_download_object_not_exists_throw_exception(self):
+    def test_create_object_already_exists_throw_exception(self):
         # given
-        # refer to setUpClass
-        object_path: str = f"{str(uuid.uuid4())}.txt" 
+        # refer to setUpClass and setUp()
 
         # when
         # then
         with self.assertRaises(Exception):
-            self._blob_helper.download(object_path)
-    
-        # Depends on download_object_nominal_case_downloaded
-    def test_publish_object_nominal_case_object_published(self):
+            self._blob_helper.create(
+                self._blob_name, 
+                TestBlobHelper._local_file_path)
+        
+    # Depends on does_exist_exists_case_success
+    def test_create_object_path_not_exists_object_exists(self):
         # given
-        # refer to setUpClass
+        # refer to setUpClass and setUp()
+        blob_name: str = f"{str(uuid.uuid4())}.txt" 
+        local_path: str = f"does_not_exist{TestBlobHelper._local_file_path}"
+
+        # when
+        self._blob_helper.create(blob_name, local_path)
+
+        # then
+        self.assertEqual(self._blob_helper.does_exist(blob_name), True)
+    
+    def test_download_object_nominal_case_downloaded(self):
+        # given
+        # refer to setUpClass and setUp()
+
+        # when
+        self._blob_helper.download(self._blob_name, TestBlobHelper._tmp_dir)
+
+        # then
+        result: bool = os.path.exists(TestBlobHelper._tmp_dir)
+        self.assertEqual(result, True)
+
+    def test_download_object_not_exists_throw_exception(self):
+        # given
+        # refer to setUpClass and setUp()
+        blob_name: str = f"{str(uuid.uuid4())}.txt" 
 
         # when
         # then
-        pass
+        with self.assertRaises(Exception):
+            self._blob_helper.download(blob_name, TestBlobHelper._tmp_dir)
         
 
     def test_publish_object_object_not_found_throw_exception(self):
         # given
-        # refer to setUpClass
+        # refer to setUpClass and setUp()
+        blob_name: str = f"{str(uuid.uuid4())}.txt" 
 
         # when
         # then
-        pass
-  
+        with self.assertRaises(Exception):
+            self._blob_helper.publish(self._blob_name)
+
+    def test_publish_object_nominal_case_object_published(self):
+        # given
+        # refer to setUpClass and setUp()
+        
+        # when
+        self._blob_helper.publish(self._blob_name)
+
+        # then
+        result: bool = self._blob_helper.is_public(self._blob_name)
+        self.assertEqual(result, True)
+        
 
 if __name__ == '__main__':
     unittest.main()
