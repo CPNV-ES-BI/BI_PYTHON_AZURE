@@ -158,7 +158,6 @@ class TestBlobHelper(unittest.TestCase):
         with self.assertRaises(Exception):
             self._blob_helper.download(blob_name, TestBlobHelper._tmp_dir)
         
-
     def test_publish_object_object_not_found_throw_exception(self):
         # given
         # refer to setUpClass and setUp()
@@ -180,6 +179,7 @@ class TestBlobHelper(unittest.TestCase):
         result: bool = self._blob_helper.is_public(self._blob_name)
         self.assertEqual(result, True)
     
+    # depends on test_does_exist_exists_case_success
     def test_delete_object_object_exists_object_deleted(self):
         # given
         # refer to setUpClass and setUp()
@@ -197,6 +197,7 @@ class TestBlobHelper(unittest.TestCase):
         # then
         pass
     
+    #depends on test_does_exist_not_exists_success
     def test_delete_object_object_doesnt_exist_throw_exception(self):
         # given
         # refer to setUpClass and setUp()
