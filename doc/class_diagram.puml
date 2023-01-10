@@ -4,19 +4,76 @@ skinparam legendBackgroundColor #fff8db
 legend top right
     Project   BI_PYTHON_AZURE
     Author    Mélodie Ohan
-    Version   21-12-2022
+    Version   10-01-2022
 endlegend
 
 title Class Diagram
-
-Interface IDataObject {
-  + Bool doesExist(objectName: string)
-  + void create(objectName: string, localFilePath: string)
-  + string download(objectPath: string)
-  + void publish(objectPath: string)
+package interface {
+  Interface IDataObject {
+    + Bool doesExist(objectName: string)
+    + void create(objectName: string, localFilePath: string)
+    + string download(objectName: string, localFilePath: string)
+    + void publish(objectName: string)
+    + void delete(objectName: string)
+  }
 }
 
-Class DataObject
+package utils { 
+  Class FileHelper{
+    + Bool isReadable(path: string)
+    + Bool isValidFilePath(path: string)
+    - string getFileName(filePath: string)
+    + string makeFromPath(writePath: string, filePath: string)
+  }
+}
 
-IDataObject <|-- DataObject
+package blob { 
+Class BlobHelper{
+    - containerClient: ContainerClient
+    + void BlobHelper(storageClient: StorageClient, containerName: string)
+    + Bool doesExist(blobName: string)
+    + void create(blobName: string, localFilePath: string)
+    + string download(blobName: string, localFilePath: string)
+    + void publish(blobName: string)
+    + void delete(blobName: string)
+    + bool isPublic(blobName: string)
+  }
+}
+
+package container { 
+  Class ContainerHelper{
+    - storageClient: StorageClient
+    + Bool doesExist(containerName: string)
+    + void create(containerName: string, localFilePath: string)
+    + string download(containerName: string, localFilePath: string)
+    + void publish(containerName: string)
+    + void delete(containerName: string)
+  }
+}
+package config { 
+  Class StorageClient{
+    - config: AzureConfig
+    - blobServiceClient: BlobServiceClient
+    + void StorageClient()
+    +  <get> BlobServiceClient(): BlobServiceClient
+    + ContainerClient getContainerClient(containerName: string)
+    + BlobClient getBlobClient(containerName: string, blobName: string)
+  }
+
+  Class AzureConfig{
+    - {static} envConnectionString: string
+    - connectionString: string
+    
+  }
+}
+
+
+IDataObject <|-- BlobHelper
+IDataObject <|-- ContainerHelper
+BlobHelper --> "1" FileHelper
+ContainerHelper --> "1" BlobHelper
+ContainerHelper --> "1" FileHelper
+BlobHelper --> "1" StorageClient
+ContainerHelper --> "1" StorageClient
+StorageClient --> "1" AzureConfig
 @enduml
