@@ -1,5 +1,4 @@
 @startuml
-
 skinparam legendBackgroundColor #fff8db
 
 legend top right
@@ -11,8 +10,8 @@ endlegend
 title Class Diagram
 
 Interface IDataObject {
-  + Bool doesExist(objectPath: string)
-  + void create(objectPath: string, localFilePath: string)
+  + Bool doesExist(objectName: string)
+  + void create(objectName: string, localFilePath: string)
   + string download(objectPath: string)
   + void publish(objectPath: string)
 }
@@ -20,5 +19,4 @@ Interface IDataObject {
 Class DataObject
 
 IDataObject <|-- DataObject
-
 @enduml
