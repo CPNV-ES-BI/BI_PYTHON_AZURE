@@ -182,28 +182,9 @@ docker run python-docker
         └── test_blob_helper.py
 ``` 
 
-## Branches strategy
-
-Refer to the workflow [GitFlow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow).
-
-GitFlow installation:
-- [Windows](https://git-scm.com/download/win)
-- [Linux/Ubuntu](https://howtoinstall.co/en/git-flow)
-
-Main branches description:
-
-| Branches  | Description |
-|---|---|
-| main/ | stores the official release history  |
-| develop/ | serves as an integration branch for features |
-| feature/| fork of `develop/` for a new feature|
-|release/|fork of `develop/`, once the release is ready, it should be merge to `main`|
-
-
-The convention name for `feature/` is `Snake Case`
-Example: `feature/my_new_feature`
-
 ## Contributing
+
+> Refer to our [branches strategy](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki#branches-strategy) and this [convention names](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki#convention-names)
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
