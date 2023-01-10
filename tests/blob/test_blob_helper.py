@@ -78,7 +78,8 @@ class TestBlobHelper(unittest.TestCase):
     
     # After each 
     def tearDown(self):
-        self._blob_helper.delete(self._blob_name)
+        if self._blob_helper.does_exist(self._blob_name):
+            self._blob_helper.delete(self._blob_name)
     
     def test_does_exist_exists_case_success(self):
         # given         
@@ -178,7 +179,33 @@ class TestBlobHelper(unittest.TestCase):
         # then
         result: bool = self._blob_helper.is_public(self._blob_name)
         self.assertEqual(result, True)
+    
+    def test_delete_object_object_exists_object_deleted(self):
+        # given
+        # refer to setUpClass and setUp()
         
+        # when
+        self._blob_helper.delete(self._blob_name)
+
+        # then
+        self.assertEqual(self._blob_helper.does_exist(self._blob_name), False)
+    
+    # TODO
+    def test_delete_object_object_containing_sub_objects_Exists_object_deleted_recursively(self):
+        # given
+        # when
+        # then
+        pass
+    
+    def test_delete_object_object_doesnt_exist_throw_exception(self):
+        # given
+        # refer to setUpClass and setUp()
+        blob_name: str = f"{str(uuid.uuid4())}.txt" 
+
+        # when
+        # then
+        with self.assertRaises(Exception):
+            self._blob_helper.delete(blob_name)
 
 if __name__ == '__main__':
     unittest.main()
