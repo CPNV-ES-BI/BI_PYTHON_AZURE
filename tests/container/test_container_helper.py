@@ -1,41 +1,83 @@
 import unittest
+import os
+import tempfile
+import shutil
 import uuid
 
 from config.storage_client import StorageClient
 from container.container_helper import ContainerHelper
+from blob.blob_helper import BlobHelper
 
 class TestContainerHelper(unittest.TestCase):
 
-    _storage_client: StorageClient      # class attribute
-    _container_helper: ContainerHelper 
-    _container_name: str                
+    # class attributes
+    _storage_client: StorageClient     
+    _blob_name: str
+    _blob_path: str 
+    _local_file_path: str        
 
+    # instance attributes
+    _container_helper: ContainerHelper 
+    _container_name: str               
+
+    # -----------------------------------------------------------------------
+    # These methods create/delete the test environment and blob 
+    # -----------------------------------------------------------------------
+    @classmethod
+    def _create_test_directory(cls):
+        """Create a tmp directory with a txt file"""
+        cls._tmp_dir = tempfile.mkdtemp()
+        file_name = f"{str(uuid.uuid4())}.txt" 
+        cls._local_file_path = os.path.join(cls._tmp_dir, file_name)
+        with open(cls._local_file_path, "w") as f: f.write("~")
+
+    @classmethod
+    def _delete_test_directory(cls):
+        """Delete the created tmp directory with its content"""
+        shutil.rmtree(cls._tmp_dir)
+    
+    @classmethod
+    def _create_blob(cls, container_name: str):
+        cls._blob_helper = BlobHelper(TestContainerHelper._storage_client, container_name)
+        cls._blob_name = "TestContainerHelper/example.txt"
+        cls._blob_helper.create(cls._blob_name, TestContainerHelper._local_file_path)
+    
+    @classmethod
+    def _path_exist(cls, container_name: str,  obj_path: str) -> bool:
+        path = os.path.join(cls._tmp_dir, container_name)
+        path = os.path.join(path, obj_path)
+        return os.path.exists(path)
+    # -----------------------------------------------------------------------
+ 
     # Before all
     @classmethod
     def setUpClass(cls):
         cls._storage_client = StorageClient()
-    
+        cls._create_test_directory()
+
     # After all
     @classmethod
     def tearDownClass(cls):
-        pass
+        cls._delete_test_directory()
 
     # Before each
     def setUp(self):
+        # create a container with a blob
+        self._container_name = f"{str(uuid.uuid4())}" 
         self._container_helper = ContainerHelper(TestContainerHelper._storage_client)
-        # Create a test container
-        self._container_name = f"{str(uuid.uuid4())}"
         self._container_helper.create(self._container_name)
-    
+        TestContainerHelper._create_blob(self._container_name)
+
     # After each 
     def tearDown(self):
-        # Delete a test container if it exists (for the delete case)
+        # Delete the container
         if self._container_helper.does_exist(self._container_name):
             self._container_helper.delete(self._container_name)
 
     def test_does_exist_exists_case_success(self):
         # given
-        
+        # refer to setUpClass and setUp()
+
         # when
         result: bool = self._container_helper.does_exist(self._container_name)
         
@@ -76,16 +118,21 @@ class TestContainerHelper(unittest.TestCase):
         # refer to setUpClass and setUp()
 
         # when
+        path: str =  self._container_helper.download(self._container_name, TestContainerHelper._tmp_dir)
+
         # then
-        pass
+        # It checks the full path to the blob
+        self.assertEqual(TestContainerHelper._path_exist(self._container_name, TestContainerHelper._blob_name), True)
 
     def test_download_object_not_exists_throw_exception(self):
         # given
         # refer to setUpClass and setUp()
-        pass
+        container_name = f"{str(uuid.uuid4())}" 
+
         # when
         # then
-        pass
+        with self.assertRaises(Exception):
+            self._container_helper.download(container_name, TestContainerHelper._tmp_dir)
 
     # depends on test_does_exist_not_exists_success
     def test_delete_object_object_exists_object_deleted(self):
