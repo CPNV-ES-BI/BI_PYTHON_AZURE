@@ -54,6 +54,12 @@ class TestBlobHelper(unittest.TestCase):
     def _delete_test_container(cls):
         """Delete the created tmp directory with its content"""
         cls._container_helper.delete(cls._container_name)
+
+    @classmethod
+    def _path_exist(cls, obj_path: str) -> bool:
+        path = os.path.join(cls._tmp_dir, obj_path)
+        return os.path.exists(path)
+
     # -----------------------------------------------------------------------
 
     # Before all
@@ -145,8 +151,7 @@ class TestBlobHelper(unittest.TestCase):
         self._blob_helper.download(self._blob_name, TestBlobHelper._tmp_dir)
 
         # then
-        result: bool = os.path.exists(TestBlobHelper._tmp_dir)
-        self.assertEqual(result, True)
+        self.assertEqual(TestBlobHelper._path_exist(self._blob_name), True)
 
     def test_download_object_not_exists_throw_exception(self):
         # given
