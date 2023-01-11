@@ -29,7 +29,6 @@ python3 -m venv .venv
 
 # venv Activation
 echo "Activate the virutal environment.."
-chmod +x .venv/bin/activate
 activate
 
 # Install dev requirements.txt
