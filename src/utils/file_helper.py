@@ -41,6 +41,9 @@ class FileHelper:
         """
         return file_path.rsplit("/", 1)[-1]
 
+    def join_path(self, start_path: str, end_path: str):
+        """Returns the join of the two paths"""
+        return os.path.join(start_path, end_path)
 
     def make_from_path(self, write_path: str, file_path: str, data) -> str:
         """ Create the folder tree of the file_path in the write_path
