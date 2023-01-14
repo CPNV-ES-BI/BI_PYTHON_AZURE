@@ -19,10 +19,13 @@ class AzureConfig:
         """Constructor
 
         Raises:
-            ValueError: if the connection string env variable is not set.
+            ValueError: if AZURE_STORAGE_CONNECTION_STRING var env is not set.
+                        if AZURE_STORAGE_CONNECTION_STRING var env is null
         """
         if not self._ENV_CONNECTION_STRING in os.environ:
-            raise ValueError("Missing attribute: connection string")
+            raise ValueError("Error: `AZURE_STORAGE_CONNECTION_STRING` (env. variable) is not defined.")
+        if not os.environ[self._ENV_CONNECTION_STRING]:
+            raise ValueError("Error: `AZURE_STORAGE_CONNECTION_STRING` (env. variable) is null.")
         self._connection_string = os.environ[self._ENV_CONNECTION_STRING]
     
     @property
