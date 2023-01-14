@@ -20,7 +20,7 @@ class AzureConfig:
 
         Raises:
             ValueError: if AZURE_STORAGE_CONNECTION_STRING var env is not set.
-                        if AZURE_STORAGE_CONNECTION_STRING var env is null
+                        if AZURE_STORAGE_CONNECTION_STRING var env is null.
         """
         if not self._ENV_CONNECTION_STRING in os.environ:
             raise ValueError("Error: `AZURE_STORAGE_CONNECTION_STRING` (env. variable) is not defined.")

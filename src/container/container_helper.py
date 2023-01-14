@@ -7,15 +7,15 @@
 
 from utils.file_helper import FileHelper
 from interface.data_object import DataObject
-from config.storage_client import StorageClient
+from src.config.azure_client import AzureClient
 from blob.blob_helper import BlobHelper   
 
 
 class ContainerHelper(DataObject):
 
-    _storage_client: StorageClient
+    _storage_client: AzureClient
 
-    def __init__(self, storage_client: StorageClient) -> None:
+    def __init__(self, storage_client: AzureClient) -> None:
         self._storage_client = storage_client
 
     def does_exist(self, container_name: str) -> bool:
@@ -24,12 +24,12 @@ class ContainerHelper(DataObject):
     def create(self, container_name: str) -> None:
         if self.does_exist(container_name):
              raise Exception(f"container `{container_name}` already exists.")
-        self._storage_client.blob_service_client.create_container(container_name)
+        self._storage_client.get_blob_service_client().create_container(container_name)
 
     def delete(self, container_name: str) -> None:
         if not self.does_exist(container_name):
             raise Exception(f"container `{container_name}` does not exist.")
-        self._storage_client.blob_service_client.delete_container(container_name)
+        self._storage_client.get_blob_service_client().delete_container(container_name)
     
     def download(self, container_name: str, local_path: str) -> str:
         if not self.does_exist(container_name):

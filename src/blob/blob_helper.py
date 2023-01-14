@@ -8,15 +8,15 @@
 import os
 
 from interface.data_object import DataObject
-from src.config.storage_client import StorageClient
-from azure.storage.blob import ContainerClient, PublicAccess #, ContainerSasPermissions, AccessPolicy, BlobSasPermissions
+from src.config.azure_client import AzureClient
+from azure.storage.blob import ContainerClient, PublicAccess
 from utils.file_helper import FileHelper
 
 class BlobHelper(DataObject):
 
     _container_client: ContainerClient
     
-    def  __init__(self, storage_client: StorageClient, container_name: str) -> None:
+    def  __init__(self, storage_client: AzureClient, container_name: str) -> None:
         self._container_client = storage_client.get_container_client(container_name)
 
     def _get_blob_client(self, blob_name: str):

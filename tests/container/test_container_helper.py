@@ -4,14 +4,14 @@ import tempfile
 import shutil
 import uuid
 
-from config.storage_client import StorageClient
+from config.azure_client import AzureClient
 from container.container_helper import ContainerHelper
 from blob.blob_helper import BlobHelper
 
 class TestContainerHelper(unittest.TestCase):
 
     # class attributes
-    _storage_client: StorageClient     
+    _storage_client: AzureClient     
     _blob_name: str
     _blob_path: str 
     _local_file_path: str        
@@ -52,7 +52,7 @@ class TestContainerHelper(unittest.TestCase):
     # Before all
     @classmethod
     def setUpClass(cls):
-        cls._storage_client = StorageClient()
+        cls._storage_client = AzureClient()
         cls._create_test_directory()
 
     # After all
