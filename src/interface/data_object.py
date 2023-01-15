@@ -69,3 +69,5 @@ class DataObject:
         Raises: 
             Exception the data object name does not exists
         """
+        raise NotImplementedError("Not implemented!")
+
