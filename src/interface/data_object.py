@@ -23,30 +23,21 @@ class DataObject:
 
         Args:
             object_name: str       Data object name
-
-            local_file_path: str   Local path (path + file.extension)
-
-        Returns:
-            DataObject in the distant storage
+            local_file_path: str   Local path (if the objects is based on a file)
 
         Raises: 
             Exception: if the object already exists in distant storage
-        
-        Notes: 
-            If the local_file_path does not exists, it creates the structure anyway.
         """
         raise NotImplementedError("Not implemented!")
 
-    def download(self, object_name: str, local_file_path: str) -> str:
-        """Download the file from the distant data object through its name
+    def download(self, object_name: str) -> list:
+        """Return a list of object to download from the distant storage
 
         Args:
             object_name: str       Data object name
-            local_file_path: str   Local path (full path to the downloaded object)
-
 
         Returns: 
-            Path to the downloaded object 
+            A list that contain the bytes of the downloaded object
 
         Raises: 
             Exception the data object name does not exists
@@ -54,13 +45,16 @@ class DataObject:
         """
         raise NotImplementedError("Not implemented!")
 
-    def publish(self, object_name: str) -> None:
-        """Set the data_object public
+    def publish(self, object_name: str) -> str:
+        """
 
         Args:
             object_name: str       Data object name (file.extension)
             local_file_path: str   Local path (path + file.extension)
 
+        Returns:
+            str public link
+        
         Raises: 
             Exception the data object name does not exists
         """
