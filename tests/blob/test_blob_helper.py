@@ -11,25 +11,25 @@ from container.container_helper import ContainerHelper
 
 class TestBlobHelper(unittest.TestCase):
 
+    # Attributes area
+    # -----------------------------------------------------------------------
+
+    # instance attributes
     _blob_helper: BlobHelper  
     _blob_name: str
 
-    # start class attributes
+    # Class attributes
     _local_file_path: str       
     _object_path: str
     _storage_client: AzureClient
     _tmp_dir: str
     _container_name: str
     _container_helper: str
-    # end class attributes area
 
+    
+    # Test class methods area
     # -----------------------------------------------------------------------
-    # These methods create/delete the test environment 
-    # and depend on the TestContainerHelper successes
-    # Refer to:
-    # - test_create_object_nominal_case_object_exists()
-    # - test_delete_object_object_exists_object_deleted
-    # -----------------------------------------------------------------------
+
     @classmethod
     def _create_test_directory(cls):
         """Create a tmp directory with a txt file"""
@@ -55,11 +55,7 @@ class TestBlobHelper(unittest.TestCase):
         """Delete the created tmp directory with its content"""
         cls._container_helper.delete(cls._container_name)
 
-    @classmethod
-    def _path_exist(cls, obj_path: str) -> bool:
-        path = os.path.join(cls._tmp_dir, obj_path)
-        return os.path.exists(path)
-
+    # SetUp and TearDown area
     # -----------------------------------------------------------------------
 
     # Before all
@@ -86,7 +82,10 @@ class TestBlobHelper(unittest.TestCase):
     def tearDown(self):
         if self._blob_helper.does_exist(self._blob_name):
             self._blob_helper.delete(self._blob_name)
-    
+
+    # Tests area
+    # -----------------------------------------------------------------------
+
     def test_does_exist_exists_case_success(self):
         # given         
         # refer to setUpClass and setUp()
@@ -148,10 +147,10 @@ class TestBlobHelper(unittest.TestCase):
         # refer to setUpClass and setUp()
 
         # when
-        self._blob_helper.download(self._blob_name, TestBlobHelper._tmp_dir)
+        result = self._blob_helper.download(self._blob_name)
 
         # then
-        self.assertEqual(TestBlobHelper._path_exist(self._blob_name), True)
+        self.assertIsNotNone(result)
 
     def test_download_object_not_exists_throw_exception(self):
         # given
@@ -161,7 +160,7 @@ class TestBlobHelper(unittest.TestCase):
         # when
         # then
         with self.assertRaises(Exception):
-            self._blob_helper.download(blob_name, TestBlobHelper._tmp_dir)
+            self._blob_helper.download(blob_name)
         
     def test_publish_object_object_not_found_throw_exception(self):
         # given

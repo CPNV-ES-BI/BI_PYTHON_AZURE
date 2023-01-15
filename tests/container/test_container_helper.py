@@ -10,19 +10,22 @@ from blob.blob_helper import BlobHelper
 
 class TestContainerHelper(unittest.TestCase):
 
-    # class attributes
-    _storage_client: AzureClient     
-    _blob_name: str
-    _blob_path: str 
-    _local_file_path: str        
+    # Attributes area
+    # -----------------------------------------------------------------------    
 
     # instance attributes
     _container_helper: ContainerHelper 
-    _container_name: str               
+    _container_name: str   
 
+    # Class attributes
+    _storage_client: AzureClient     
+    _blob_name: str
+    _blob_path: str 
+    _local_file_path: str                
+
+    # Test class methods area
     # -----------------------------------------------------------------------
-    # These methods create/delete the test environment and blob 
-    # -----------------------------------------------------------------------
+  
     @classmethod
     def _create_test_directory(cls):
         """Create a tmp directory with a txt file"""
@@ -47,8 +50,10 @@ class TestContainerHelper(unittest.TestCase):
         path = os.path.join(cls._tmp_dir, container_name)
         path = os.path.join(path, obj_path)
         return os.path.exists(path)
+
+    # SetUp and TearDown area
     # -----------------------------------------------------------------------
- 
+
     # Before all
     @classmethod
     def setUpClass(cls):
@@ -73,6 +78,9 @@ class TestContainerHelper(unittest.TestCase):
         # Delete the container
         if self._container_helper.does_exist(self._container_name):
             self._container_helper.delete(self._container_name)
+
+    # Tests area
+    # -----------------------------------------------------------------------
 
     def test_does_exist_exists_case_success(self):
         # given
@@ -118,11 +126,11 @@ class TestContainerHelper(unittest.TestCase):
         # refer to setUpClass and setUp()
 
         # when
-        path: str =  self._container_helper.download(self._container_name, TestContainerHelper._tmp_dir)
+        result = self._container_helper.download(self._container_name)
 
         # then
         # It checks the full path to the blob
-        self.assertEqual(TestContainerHelper._path_exist(self._container_name, TestContainerHelper._blob_name), True)
+        self.assertIsNotNone(result)
 
     def test_download_object_not_exists_throw_exception(self):
         # given
@@ -132,7 +140,7 @@ class TestContainerHelper(unittest.TestCase):
         # when
         # then
         with self.assertRaises(Exception):
-            self._container_helper.download(container_name, TestContainerHelper._tmp_dir)
+            self._container_helper.download(container_name)
 
     # depends on test_does_exist_not_exists_success
     def test_delete_object_object_exists_object_deleted(self):
