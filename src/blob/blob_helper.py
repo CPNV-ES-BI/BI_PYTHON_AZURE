@@ -9,7 +9,7 @@ import os
 
 from interface.data_object import DataObject
 from src.config.azure_client import AzureClient
-from azure.storage.blob import ContainerClient, StorageStreamDownloader
+from azure.storage.blob import ContainerClient, BlobClient, StorageStreamDownloader
 
 class BlobHelper(DataObject):
 
@@ -20,8 +20,11 @@ class BlobHelper(DataObject):
         self._storage_client = storage_client
         self._container_name = container_name
 
-    def __blob_client(self, blob_name: str) -> ContainerClient:
+    def __blob_client(self, blob_name: str) -> BlobClient:
         return self._storage_client.get_blob_client(self._container_name, blob_name)
+    
+    def __container_client(self) -> ContainerClient:
+        return self._storage_client.get_container_client(self._container_name)
 
     def does_exist(self, blob_name: str) -> bool:
         return self.__blob_client(blob_name).exists()
@@ -49,6 +52,21 @@ class BlobHelper(DataObject):
         raise NotImplementedError("It is not possible yet to define a public blob.")
           
     def delete(self, blob_name: str) -> None:
-        if not self.does_exist(blob_name):
-            raise Exception(f"blob `{blob_name}` does not exist.")
-        self.__blob_client(blob_name).delete_blob()
+        """Delete any blob that the name start with the given parameter.
+        
+        Args: 
+            blob_name: str folder path of the blob or the blob name
+
+        Raises:
+            Exception       if no blob starts with the given name
+        
+        Notes:
+            If the given name is `images/` it will delete 
+            `images/example.png`
+            as well as `images/figure/diagram.png`
+        """
+        blobs = list(self.__container_client().list_blob_names(name_starts_with=blob_name))
+        if not len(blobs):
+            raise Exception(f"No blob starts with `{blob_name}` does not exist.")
+        for blob in blobs:
+            self.__blob_client(blob).delete_blob()

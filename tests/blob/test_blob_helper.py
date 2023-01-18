@@ -12,8 +12,10 @@ class TestBlobHelper(unittest.TestCase):
     # -----------------------------------------------------------------------
 
     # instance attributes
-    __blob_helper: BlobHelper  
+    __blob_helper: BlobHelper
+    __blobs_directory: str  
     __blob_name: str
+    __sub_blob_name: str
 
     # Class attributes
     __local_file_path: str     
@@ -50,7 +52,7 @@ class TestBlobHelper(unittest.TestCase):
         file_name = f"{get_random_name()}.txt"
         cls.__tmp_dir = create_test_directory(file_name)
         cls.__local_file_path = merge_paths(cls.__tmp_dir, file_name)
-    
+
     # After all
     @classmethod
     def tearDownClass(cls):
@@ -60,13 +62,20 @@ class TestBlobHelper(unittest.TestCase):
     # Before each
     def setUp(self):
         self.__blob_helper = BlobHelper(TestBlobHelper.__storage_client, TestBlobHelper.__container_name)
-        self.__blob_name = "TestBlobHelper/example.txt"
+        self.__blobs_directory = "TestBlobHelper"
+        # Define blob names
+        self.__blob_name     = f"{self.__blobs_directory}/example.txt"
+        self.__sub_blob_name = f"{self.__blobs_directory}/subTest/example.txt"
+        # Create blobs
         self.__blob_helper.create(self.__blob_name, TestBlobHelper.__local_file_path)
+        self.__blob_helper.create(self.__sub_blob_name, TestBlobHelper.__local_file_path)      
     
     # After each 
     def tearDown(self):
         if self.__blob_helper.does_exist(self.__blob_name):
             self.__blob_helper.delete(self.__blob_name)
+        if self.__blob_helper.does_exist(self.__sub_blob_name):
+            self.__blob_helper.delete(self.__sub_blob_name)
 
     # Tests area
     # -----------------------------------------------------------------------
@@ -180,12 +189,13 @@ class TestBlobHelper(unittest.TestCase):
 
     def test_delete_object_object_containing_sub_objects_exists_object_deleted_recursively(self):
         # given
-        # refer to setUpClass and setUp()
-   
+        # Refer to setUp and setUpClass
+
         # when
-        self.__blob_helper.delete(self.__blob_name)
+        self.__blob_helper.delete(self.__blobs_directory)
 
         # then
+        self.assertEqual(self.__blob_helper.does_exist(self.__sub_blob_name), False)
         self.assertEqual(self.__blob_helper.does_exist(self.__blob_name), False)
     
     #depends on test_does_exist_not_exists_success

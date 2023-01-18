@@ -159,11 +159,12 @@ class TestContainerHelper(unittest.TestCase):
     def test_delete_object_object_containing_sub_objects_exists_object_deleted_recursively(self):
         # given
         # refer to setUp()
-
+        
         # when
         self.__container_helper.delete(self.__container_name)
 
         # then
+        # We assume that the delete method delete any blob contained in the container
         self.assertEqual(self.__container_helper.does_exist(self.__container_name), False)
 
     def test_delete_object_object_doesnt_exist_throw_exception(self):
