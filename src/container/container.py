@@ -7,10 +7,10 @@
 
 from interface.data_object import DataObject
 from src.config.azure_client import AzureClient
-from blob.blob_helper import BlobHelper   
+from src.blob.blob import Blob   
 
 
-class ContainerHelper(DataObject):
+class Container(DataObject):
 
     _storage_client: AzureClient
 
@@ -38,12 +38,12 @@ class ContainerHelper(DataObject):
         blobs: list = self._storage_client.get_container_client(container_name).list_blobs()
         result = list[bytes]()
         for blob in blobs:
-            data: list[bytes] = BlobHelper(self._storage_client, container_name).download(blob.name)
+            data: list[bytes] = Blob(self._storage_client, container_name).download(blob.name)
             if data:
                 result.append(data[0])
         return result
 
-    def delete(self, container_name: str) -> None:
+    def delete(self, container_name: str, recusrive: bool = True) -> None:
         if not self.does_exist(container_name):
             raise Exception(f"container `{container_name}` does not exist.")
         self._storage_client.get_blob_service_client().delete_container(container_name)

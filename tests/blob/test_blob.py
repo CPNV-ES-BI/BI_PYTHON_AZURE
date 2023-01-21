@@ -1,18 +1,18 @@
 import unittest
 
 from tests.functions import get_random_name, create_test_directory, delete_directory, merge_paths
-from blob.blob_helper import BlobHelper
+from blob.blob import Blob
 from config.azure_client import AzureClient
-from container.container_helper import ContainerHelper
+from container.container import Container
 
 
-class TestBlobHelper(unittest.TestCase):
+class TestBlob(unittest.TestCase):
 
     # Attributes area
     # -----------------------------------------------------------------------
 
     # instance attributes
-    __blob_helper: BlobHelper
+    __blob_helper: Blob
     __blobs_directory: str  
     __blob_name: str
     __sub_blob_name: str
@@ -22,7 +22,7 @@ class TestBlobHelper(unittest.TestCase):
     __storage_client: AzureClient
     __tmp_dir: str
     __container_name: str
-    __container_helper: str
+    __container: str
 
     
     # Test class methods area
@@ -32,13 +32,13 @@ class TestBlobHelper(unittest.TestCase):
     def __create_test_container(cls):
         """Create a container with a random name"""
         cls.__container_name = get_random_name()
-        cls.__container_helper = ContainerHelper(cls.__storage_client)
-        cls.__container_helper.create(cls.__container_name)
+        cls.__container = Container(cls.__storage_client)
+        cls.__container.create(cls.__container_name)
 
     @classmethod
     def __delete_test_container(cls):
         """Delete the created tmp directory with its content"""
-        cls.__container_helper.delete(cls.__container_name)
+        cls.__container.delete(cls.__container_name)
 
     # SetUp and TearDown area
     # -----------------------------------------------------------------------
@@ -61,21 +61,21 @@ class TestBlobHelper(unittest.TestCase):
 
     # Before each
     def setUp(self):
-        self.__blob_helper = BlobHelper(TestBlobHelper.__storage_client, TestBlobHelper.__container_name)
-        self.__blobs_directory = "TestBlobHelper"
+        self.__blob = Blob(TestBlob.__storage_client, TestBlob.__container_name)
+        self.__blobs_directory = "TestBlob"
         # Define blob names
         self.__blob_name     = f"{self.__blobs_directory}/example.txt"
         self.__sub_blob_name = f"{self.__blobs_directory}/subTest/example.txt"
         # Create blobs
-        self.__blob_helper.create(self.__blob_name, TestBlobHelper.__local_file_path)
-        self.__blob_helper.create(self.__sub_blob_name, TestBlobHelper.__local_file_path)      
+        self.__blob.create(self.__blob_name, TestBlob.__local_file_path)
+        self.__blob.create(self.__sub_blob_name, TestBlob.__local_file_path)      
     
     # After each 
     def tearDown(self):
-        if self.__blob_helper.does_exist(self.__blob_name):
-            self.__blob_helper.delete(self.__blob_name)
-        if self.__blob_helper.does_exist(self.__sub_blob_name):
-            self.__blob_helper.delete(self.__sub_blob_name)
+        if self.__blob.does_exist(self.__blob_name):
+            self.__blob.delete(self.__blob_name)
+        if self.__blob.does_exist(self.__sub_blob_name):
+            self.__blob.delete(self.__sub_blob_name)
 
     # Tests area
     # -----------------------------------------------------------------------
@@ -85,7 +85,7 @@ class TestBlobHelper(unittest.TestCase):
         # refer to setUpClass and setUp()
                 
         # when
-        result: bool = self.__blob_helper.does_exist(self.__blob_name)
+        result: bool = self.__blob.does_exist(self.__blob_name)
         
         # then
         self.assertEqual(result, True)
@@ -96,7 +96,7 @@ class TestBlobHelper(unittest.TestCase):
         blob_name: str =  f"{get_random_name()}.txt" 
 
         # when
-        result: bool = self.__blob_helper.does_exist(blob_name)
+        result: bool = self.__blob.does_exist(blob_name)
         
         # then
         self.assertEqual(result, False)
@@ -109,7 +109,7 @@ class TestBlobHelper(unittest.TestCase):
         # refer to setUpClass and setUp()
 
         # then
-        object_exist: bool = self.__blob_helper.does_exist(self.__blob_name)  
+        object_exist: bool = self.__blob.does_exist(self.__blob_name)  
         self.assertEqual(object_exist, True)
 
     def test_create_object_already_exists_throw_exception(self):
@@ -119,29 +119,29 @@ class TestBlobHelper(unittest.TestCase):
         # when
         # then
         with self.assertRaises(Exception):
-            self.__blob_helper.create(
+            self.__blob.create(
                 self.__blob_name, 
-                TestBlobHelper.__local_file_path)
+                TestBlob.__local_file_path)
         
     # Depends on does_exist_exists_case_success
     def test_create_object_path_not_exists_object_exists(self):
         # given
         # refer to setUpClass and setUp()
         blob_name: str = f"{get_random_name()}.txt" 
-        local_path: str = f"does_not_exist{TestBlobHelper.__local_file_path}"
+        local_path: str = f"does_not_exist{TestBlob.__local_file_path}"
 
         # when
-        self.__blob_helper.create(blob_name, local_path)
+        self.__blob.create(blob_name, local_path)
 
         # then
-        self.assertEqual(self.__blob_helper.does_exist(blob_name), True)
+        self.assertEqual(self.__blob.does_exist(blob_name), True)
     
     def test_download_object_nominal_case_downloaded(self):
         # given
         # refer to setUpClass and setUp()
 
         # when
-        result = self.__blob_helper.download(self.__blob_name)
+        result = self.__blob.download(self.__blob_name)
 
         # then
         self.assertIsNotNone(result)
@@ -154,14 +154,14 @@ class TestBlobHelper(unittest.TestCase):
         # when
         # then
         with self.assertRaises(Exception):
-            self.__blob_helper.download(blob_name)
+            self.__blob.download(blob_name)
     
     def test_publish_object_nominal_case_object_published(self):
         # given
         # refer to setUpClass and setUp()
         
         # when
-        result: str = self.__blob_helper.publish(self.__blob_name)
+        result: str = self.__blob.publish(self.__blob_name)
 
         # then
         self.assertIsNotNone(result)
@@ -174,7 +174,7 @@ class TestBlobHelper(unittest.TestCase):
         # when
         # then
         with self.assertRaises(Exception):
-            self.__blob_helper.publish(self.__blob_name)
+            self.__blob.publish(self.__blob_name)
     
     # depends on test_does_exist_exists_case_success
     def test_delete_object_object_exists_object_deleted(self):
@@ -182,21 +182,21 @@ class TestBlobHelper(unittest.TestCase):
         # refer to setUpClass and setUp()
         
         # when
-        self.__blob_helper.delete(self.__blob_name)
+        self.__blob.delete(self.__blob_name)
 
         # then
-        self.assertEqual(self.__blob_helper.does_exist(self.__blob_name), False)
+        self.assertEqual(self.__blob.does_exist(self.__blob_name), False)
 
     def test_delete_object_object_containing_sub_objects_exists_object_deleted_recursively(self):
         # given
         # Refer to setUp and setUpClass
 
         # when
-        self.__blob_helper.delete(self.__blobs_directory)
+        self.__blob.delete(self.__blobs_directory)
 
         # then
-        self.assertEqual(self.__blob_helper.does_exist(self.__sub_blob_name), False)
-        self.assertEqual(self.__blob_helper.does_exist(self.__blob_name), False)
+        self.assertEqual(self.__blob.does_exist(self.__sub_blob_name), False)
+        self.assertEqual(self.__blob.does_exist(self.__blob_name), False)
     
     #depends on test_does_exist_not_exists_success
     def test_delete_object_object_doesnt_exist_throw_exception(self):
@@ -207,7 +207,7 @@ class TestBlobHelper(unittest.TestCase):
         # when
         # then
         with self.assertRaises(Exception):
-            self.__blob_helper.delete(blob_name)
+            self.__blob.delete(blob_name)
 
 if __name__ == '__main__':
     unittest.main()
