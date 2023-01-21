@@ -12,7 +12,7 @@ class TestBlob(unittest.TestCase):
     # -----------------------------------------------------------------------
 
     # instance attributes
-    __blob_helper: Blob
+    __blob: Blob
     __blobs_directory: str  
     __blob_name: str
     __sub_blob_name: str
