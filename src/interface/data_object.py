@@ -30,7 +30,7 @@ class DataObject:
         """
         raise NotImplementedError("Not implemented!")
 
-    def download(self, object_name: str) -> list:
+    def download(self, object_name: str) -> bytes:
         """Return a list of object to download from the distant storage
 
         Args:
@@ -46,7 +46,7 @@ class DataObject:
         raise NotImplementedError("Not implemented!")
 
     def publish(self, object_name: str) -> str:
-        """
+        """ Make the content
 
         Args:
             object_name: str       Data object name (file.extension)
@@ -60,11 +60,13 @@ class DataObject:
         """
         raise NotImplementedError("Not implemented!")
 
-    def delete(self, object_name: str) -> None:
-        """Delete the data object by its name
+    def delete(self, object_name: str, recursive: bool) -> None:
+        """Delete the data object by its name. 
+        Will delete recursively if the recursive parameter is true.
 
         Args:
-            object_name: str       Data object name (file.extension)
+            object_name: str     Data object name (file.extension)
+            recursive: bool      Delete recursively its content   
 
         Raises: 
             Exception the data object name does not exists
