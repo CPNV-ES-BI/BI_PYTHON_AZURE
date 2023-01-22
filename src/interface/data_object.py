@@ -27,7 +27,7 @@ class DataObject:
             local_file_path: str   For cases where the object needs a local file path
 
         Raises: 
-            errors.DataObjectAlreadyExists
+            errors.DataObjectError if the object already exists
 
         """
         raise NotImplementedError("Not implemented!")
@@ -42,7 +42,7 @@ class DataObject:
             A list that contain the bytes of the downloaded object
 
         Raises: 
-            errors.DataObjectDoesNotExist
+            errors.DataObjectError if the object does not exist
 
         """
         raise NotImplementedError("Not implemented!")
@@ -57,7 +57,7 @@ class DataObject:
             str public link
         
         Raises: 
-            errors.DataObjectDoesNotExist
+            errors.DataObjectError if the object does not exist
 
         """
         raise NotImplementedError("Not implemented!")
@@ -71,7 +71,7 @@ class DataObject:
             recursive: bool      Indicate to recursively delete data object content
 
         Raises: 
-            errors.DataObjectDoesNotExist
+            errors.DataObjectError if the object does not exist
 
         """
         raise NotImplementedError("Not implemented!")
