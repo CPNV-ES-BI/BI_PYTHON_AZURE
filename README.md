@@ -6,8 +6,8 @@
 # BI - DataObject
 
 The goal of this project is to provide a microservice that allow interaction with Microsoft Azure data objects.
+The microservice will have its own API that will allow interaction with its Data Object library.
 
-For now, the features to be expected are the creation and deletion of a `blob` or a `container`, and to download and publish a `blob`.
 
 
 ## Table of Contents
@@ -15,9 +15,10 @@ For now, the features to be expected are the creation and deletion of a `blob` o
 2. [Setting up dev](#setting-up-dev)
     1. [Requirements](#requirements)
     2. [Clone repository](#clone-repository)
-    3. [Run the configuration script](#run-the-configuration-script)
-    4. [Manual configuration](#manual-configuration)
-    6. [Run unittests](#run-unittests)
+    3. [Configuration of the development environment](#configuration-of-the-development-environment)
+       1. [Linux terminal environment](#linux-terminal-environment)
+       2. [Manual configuration (Linux/Windows)](#manual-configuration--linuxwindows-)
+   4. [Run unittests](#run-unittests)
 3. [Docker](#docker)
     1. [Run](#run)
 4. [Branches strategy](#branches-strategy)
@@ -50,31 +51,38 @@ cd BI_PYTHON_AZURE/
 git switch develop
 ```
 
-### Run the configuration script
+### Configuration of the development environment
 
-> Works on Linux/Unix like operating systems
+The development environment requires the following:
+- Add the `src` directory to the PYTHONPATH
+- Assign the environment variable `AZURE_STORAGE_CONNECTION_STRING`
+- Installing the library prerequisites in `requirements.txt`
 
-The following script will:
-- install the requirements in a virtual environment
-- copy the `.env.variables.sh `and name it `env.variables.sh`
-- add the `src` directory to your PYTHONPATH
+#### Linux terminal environment
+
+It is possible to configure its environment via the script `setting_up_env.sh` But its purpose will be to prepare the production environment.
+The library contained in `src` will be functional, but you will still have to configure your IDE with the points mentioned in the introduction of this section. 
 
 ```shell
-source setting_up_dev.sh
+source setting_up_env.sh
 ``` 
+
 Then just set your connection string in `env.variables.sh`.
 
-### Manual configuration
+#### Manual configuration (Linux/Windows)
 
-####  Create the Virtual environment
+For the configuration of the IDE please refer to the Wiki.
+
+##### Create the Virtual environment
 
 Create a Python virtual environment in `BI_PYTHON_AZURE/` 
 ```sh
-python3 -m venv .venv
+python3 -m venv venv
 ```
 
 1. Activate virtual environment 
 Activate the newly created virtual environment:
+For windows refer to the [official documentation](https://docs.python.org/3/library/venv.html#how-venvs-work)
 ```sh
 source .venv/bin/activate
 ```
@@ -84,42 +92,45 @@ To deactivate an active virtual environment:
  deactivate
 ```
 
-#### Install the requirements
+##### Install the requirements
 
 ```sh
 pip install -r requirements.txt
 ```
 
-#### Set your connection string
+##### Set your connection string
 
-1. Rename `.env.variables.sh` to `env.variables.sh`
+On Windows you have to create a new environment variable named `AZURE_STORAGE_CONNECTION_STRING`.
+You can refer to this [documentation](https://www.roelpeters.be/set-environment-variables-in-virtual-environment-python/).
+
+For linux rename `.env.variables.sh` to `env.variables.sh`
+In command line 
 ```sh
-mv .env.variables.sh env.variables.sh
+cp .env.variables.sh env.variables.sh
 ``` 
-2. Open this file and set your environment variables
 
-3. [Run unittests](#run-unittests) to ensure that the environment is correctly installed.
-
-
-#### Add SRC to your PYTHONPATH
-
+Then perform the following command to add this to your virtual environment.
 ```sh
-export PYTHONPATH="${PYTHONPATH}:/home/example/BI_PYTHON_AZURE/src/"
+source env.variables.sh
 ```
 
 ### Run Unittests
 
-> Make sure to 
+> Make sure to be at the root level of the project when you run these commands.
 
 #### Run all tests
+> 
+```shell
+python3 -m unittest discover
+```
 
-Execute the shell script `run_unittests.sh`
+It is possible on Linux to launch all unit tests via the script  `run_tests.sh`
 
 ```sh
 ./run_unittests.sh
 ``` 
 
-#### Manually
+#### Run one test
 The framework for running unit tests is [unittests](https://docs.python.org/3.10/library/unittest.html).
 
 > This command will execute any test modules in the root of `tests` directory
@@ -130,7 +141,7 @@ python3 -m unittest discover tests/
 
 You can also run a single test this with the following command example:
 ```sh
-python3 tests/test_data_object.py TestDataObject.test_create_object_path_not_exists_object_exists
+python3 tests/test_my_class.py TestMyClass.test_create_object_path_not_exists_object_exists
 ```
 
 ## Docker
@@ -146,6 +157,7 @@ source .venv/bin/activate
 ```
 
 2. Run docker
+
 ```sh
 docker run python-docker
 ```
@@ -155,31 +167,47 @@ docker run python-docker
 > The `tests` directory must have the same structure as the objects tested in `src`
 
 ```sh
-├── doc                                   # Documentation directory
+├── doc                                     # Documentation directory
 │   ├── class_diagram.png
 │   └── class_diagram.puml
-├── Dockerfile
-├── example.run_tests.sh                            
-├── LICENSE
+├── Dockerfile                              # DockerFile
+├── env.variables.sh                        # Where is defined the value of AZURE_STORAGE_CONNECTION_STRING env
+├── LICENSE     
 ├── README.md
-├── requirements.txt
-├── run_tests.sh
-├── src                                   # Project directory
+├── requirements.txt                        # Contains the required external python modules 
+├── run_tests.sh                            # Run tests script
+├── setting_up_env.sh                       # Script for the production environnment
+│
+├── src                                     # Library src directory
 │   ├── app.py
-│   ├── blob                              # Blob DataObject directory
-│   │   ├── blob_helper.py
+│   ├── blob                                # Contains the blob_helper module
+│   │   ├── blob_helper.py                  
+│   │   ├── errors                              # Contains blob_helper custom exception classes
 │   │   ├── __init__.py
-│   ├── config                            # Azure credentials configuration directory
-│   │   ├── azure_config.py                       # Where the env variables are retrieved
-│   │   ├── client.py                             # Provides the required clients to DataObjects
-│   │   └── __init__.py
+│   ├── config                              # Configuration module
+│   │   ├── azure_client.py                     # This class provides required Azure Client
+│   │   ├── azure_config.py                     # This class get the local variable environment
+│   │   ├── __init__.py
+│   ├── container                           # Contains the container_helper module
+│   │   ├── container_helper.py                 
+│   │   ├── errors                              # Contains container_helper custom exception classes
+│   │   ├── __init__.py
 │   ├── __init__.py
-│   ├── interface                         # Where interfaces are defined
-│       ├── data_object.py                              
-│       └── __init__.py
-└── tests                                 # Tests directory
-    └── blob
-        └── test_blob_helper.py
+│   └─── interface
+│       ├── data_object.py
+│       ├── errors
+│       └─── __init__.py
+│  
+├── tests                                   # Unittests test directory
+│   ├── blob
+│   │   ├── files                          
+│   │   ├── __init__.py
+│   │   └── test_blob_helper.py
+│   ├── container
+│   │   ├── __init__.py
+│   │   └── test_container_helper.py
+│   └─── __init__.py
+
 ``` 
 
 ## Contributing
