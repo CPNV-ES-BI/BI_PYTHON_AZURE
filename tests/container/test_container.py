@@ -19,21 +19,14 @@ class TestContainer(unittest.TestCase):
     __container: Container
     __container_name: str
 
-    # Test class methods area
+    # Required methods for test execution
     # -----------------------------------------------------------------------
     @staticmethod
     def get_random_container_name() -> str:
-        """ Return a unique container name.
-        The prefix of the container is "container-" and it is completed with 15 generated char from uuid.
-
-        :return: str
-
-        """
+        """ Return a unique name with 'container-' and 10 uuid char"""
         # Use the first 15 characters and the last 15 characters of the UUID to limit collision in names
         uuid_str = str(uuid.uuid4()).replace("-", "")
-        return f"container-{uuid_str[:15] + uuid_str[-15:]}"
-
-    # incoming. ..
+        return f"container-{uuid_str[:5] + uuid_str[-5:]}"
 
     # SetUp and TearDown area
     # -----------------------------------------------------------------------
@@ -41,14 +34,13 @@ class TestContainer(unittest.TestCase):
     # Before all
     @classmethod
     def setUpClass(cls):
-        # Will be defined for every class
+        # Will be defined for every container class
         cls.__storage_client = AzureClient()
 
     # After all
     @classmethod
     def tearDownClass(cls):
         # AzureClient and Container instance are properly collected by the GC
-        # Container close himself any connection
         pass
 
     # Before each
