@@ -403,7 +403,11 @@ venv
 # Ignore python cache
 *.__pycache__
 
-# Ignore private config file
-azure_config.json
-
+# Ignore the connection string variable
 env.variables.sh
+
+# Ignore .idea pycharm
+.idea
+
+
+
