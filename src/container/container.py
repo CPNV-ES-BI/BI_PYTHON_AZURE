@@ -1,9 +1,12 @@
 # -----------------------------------------------------------------------------------  
 # File   :   container_helper.py
 # Author :   Mélodie Ohan
-# Version:   02-01-2022 - original (dedicated to BI1)
+# Version:   22-01-2022 - original (dedicated to BI1)
 # Remarks:   
 # -----------------------------------------------------------------------------------
+
+from datetime import datetime, timedelta
+from azure.storage.blob import ContainerSasPermissions, PublicAccess, AccessPolicy
 
 from interface.data_object import DataObject
 from config.azure_client import AzureClient
@@ -32,11 +35,9 @@ class Container(DataObject):
 
     def publish(self, container_name: str) -> str:
         raise ContainerForbiddenOperationError("This operation is not possible on container.")
-        return None
 
     def download(self, container_name: str) -> bytes:
         raise ContainerForbiddenOperationError("This operation is not possible on container")
-        return None
 
     def delete(self, container_name: str, recursive: bool = True) -> None:
         if not recursive:
@@ -44,3 +45,26 @@ class Container(DataObject):
         if not self.does_exist(container_name):
             raise ContainerDoesNotExistError(f"Container `{container_name}` does not exist.")
         self._storage_client.get_blob_service_client().delete_container(container_name)
+
+    def list_blobs(self, container_name: str) -> list:
+        if not self.does_exist(container_name):
+            raise ContainerDoesNotExistError(f"Container `{container_name}` does not exist.")
+
+    def set_container_public_read_access(self, container_name: str) -> None:
+        """Set the container access policy to the privded access
+
+        Args:
+            container_name: str       Data object name
+
+        Raises:
+            ContainerDoesNotExistError if the container does not exist
+        """
+        if not self.does_exist(container_name):
+            raise ContainerDoesNotExistError(f"Container `{container_name}` does not exist.")
+        access_policy = AccessPolicy(permission=ContainerSasPermissions(read=True, write=True),
+                                     expiry=datetime.utcnow() + timedelta(hours=1),
+                                     start=datetime.utcnow() - timedelta(minutes=1))
+        identifiers = {'read': access_policy}
+        public_access = PublicAccess.Container
+        self._storage_client.get_container_client(container_name)\
+            .set_container_access_policy(signed_identifiers=identifiers,public_access=public_access)
