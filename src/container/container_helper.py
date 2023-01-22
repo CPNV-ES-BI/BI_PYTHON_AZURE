@@ -15,7 +15,9 @@ from container.errors.container_does_not_exist_error import ContainerDoesNotExis
 from container.errors.container_forbidden_operation_error import ContainerForbiddenOperationError
 
 
-class Container(DataObject):
+class ContainerHelper(DataObject):
+    """Provide methods for performing operations on container"""
+
     _storage_client: AzureClient
 
     def __init__(self, storage_client: AzureClient) -> None:
@@ -46,12 +48,8 @@ class Container(DataObject):
             raise ContainerDoesNotExistError(f"Container `{container_name}` does not exist.")
         self._storage_client.get_blob_service_client().delete_container(container_name)
 
-    def list_blobs(self, container_name: str) -> list:
-        if not self.does_exist(container_name):
-            raise ContainerDoesNotExistError(f"Container `{container_name}` does not exist.")
-
     def set_container_public_read_access(self, container_name: str) -> None:
-        """Set the container access policy to the privded access
+        """Set the container access policy to the provided access
 
         Args:
             container_name: str       Data object name

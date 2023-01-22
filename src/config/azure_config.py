@@ -8,6 +8,7 @@
 
 import os
 
+
 class AzureConfig:
     """Retrieves and verifies the environment variables needed for an Azure configuration"""
 

@@ -1,3 +1,10 @@
+# -----------------------------------------------------------------------------------
+# File   :   blob_helper.py
+# Author :   Mélodie Ohan
+# Version:   22-01-2023 - original (dedicated to BI1)
+# Remarks:   -
+# -----------------------------------------------------------------------------------
+
 import os
 
 from azure.storage.blob import ContainerClient, BlobClient, StorageStreamDownloader
@@ -9,7 +16,16 @@ from blob.errors.blob_already_exists_error import BlobAlreadyExistsError
 from blob.errors.blob_does_not_exist_error import BlobDoesNotExistError
 
 
-class Blob(DataObject):
+class BlobHelper(DataObject):
+    """Provide methods for performing operations on blobs
+
+    Notes
+    ---
+    It is not possible to change the access level of a blob.
+    In order to do so, you have to temporary set the container access policy to public.
+    Refer to ContainerHelper set_container_public_read_access method.
+
+    """
 
     _storage_client: AzureClient
 

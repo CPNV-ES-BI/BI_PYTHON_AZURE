@@ -1,5 +1,12 @@
+# -----------------------------------------------------------------------------------
+# File   :   azure_client.py
+# Author :   Mélodie Ohan
+# Version:   22-01-2022 - original (dedicated to BI1)
+# Remarks:
+# -----------------------------------------------------------------------------------
+
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
-from src.config.azure_config import AzureConfig
+from config.azure_config import AzureConfig
 
 
 class AzureClient:

@@ -1,6 +1,13 @@
-from container.errors.container_error import ContainerError
+# -----------------------------------------------------------------------------------
+# File   :   container_already_exists_error.py
+# Author :   Mélodie Ohan
+# Version:   22-01-2023 - original (dedicated to BI1)
+# Remarks:   -
+# -----------------------------------------------------------------------------------
+
+from container.errors.container_helper_error import ContainerHelperError
 
 
-class ContainerAlreadyExistsError(ContainerError):
+class ContainerAlreadyExistsError(ContainerHelperError):
     """Raised when creating an already existing container"""
     pass

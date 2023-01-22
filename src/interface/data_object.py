@@ -1,3 +1,10 @@
+# -----------------------------------------------------------------------------------
+# File   :   data_object.py
+# Author :   Mélodie Ohan
+# Version:   22-01-2022 - original (dedicated to BI1)
+# Remarks:   -
+# -----------------------------------------------------------------------------------
+
 class DataObject:
     """DataObject interface
     
