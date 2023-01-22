@@ -24,7 +24,7 @@ class DataObject:
 
         Args:
             object_name: str       Data object name
-            local_file_path: str   Optional, For cases where the object needs a local file path
+            local_file_path: str   For cases where the object needs a local file path
 
         Raises: 
             errors.DataObjectAlreadyExists
@@ -68,7 +68,7 @@ class DataObject:
 
         Args:
             object_name: str     Data object name (file.extension)
-            recursive: bool      (Optional) Indicate to recursively delete data object content
+            recursive: bool      Indicate to recursively delete data object content
 
         Raises: 
             errors.DataObjectDoesNotExist
