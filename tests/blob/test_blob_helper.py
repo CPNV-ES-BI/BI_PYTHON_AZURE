@@ -9,6 +9,7 @@ import unittest
 import os
 import uuid
 import re
+import inspect
 
 from config.azure_client import AzureClient
 from blob.blob_helper import BlobHelper
@@ -49,7 +50,7 @@ class TestBlobHelper(unittest.TestCase):
     def __get_test_file_path() -> str:
         """Get the existing test file path."""
         # get the current directory
-        test_dir = os.getcwd()
+        test_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
         # complete the path to the test file
         test_dir = os.path.join(test_dir, TestBlobHelper.__TEST_DIR_NAME)
         return os.path.join(test_dir, TestBlobHelper.__TEST_FILE_NAME)
