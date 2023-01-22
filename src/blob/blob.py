@@ -1,22 +1,19 @@
-# -----------------------------------------------------------------------------------  
-# File   :   blob_helper.py
-# Author :   Mélodie Ohan
-# Version:   20-12-2022 - original (dedicated to BI1)
-# Remarks:   -
-# -----------------------------------------------------------------------------------
-
 import os
 
-from interface.data_object import DataObject
-from src.config.azure_client import AzureClient
 from azure.storage.blob import ContainerClient, BlobClient, StorageStreamDownloader
+
+from interface.data_object import DataObject
+from config.azure_client import AzureClient
+from blob.errors.blob_already_exists_error import BlobAlreadyExistsError
+from blob.errors.blob_does_not_exist_error import BlobDoesNotExistError
+
 
 class Blob(DataObject):
 
     _storage_client: AzureClient
     _container_name: str
     
-    def  __init__(self, storage_client: AzureClient, container_name: str) -> None:
+    def __init__(self, storage_client: AzureClient, container_name: str) -> None:
         self._storage_client = storage_client
         self._container_name = container_name
 
@@ -30,9 +27,8 @@ class Blob(DataObject):
         return self.__blob_client(blob_name).exists()
 
     def create(self, blob_name: str, local_file_path: str) -> None:
-
         if self.does_exist(blob_name):
-            raise Exception(f"blob `{blob_name}` already exists.")
+            raise BlobAlreadyExistsError(f"blob `{blob_name}` already exists.")
 
         if not os.path.exists(local_file_path):
             self.__blob_client(blob_name).upload_blob(data="")
@@ -42,19 +38,26 @@ class Blob(DataObject):
 
     def download(self, blob_name: str) -> list[bytes]:
         if not self.does_exist(blob_name):
-            raise Exception(f"blob `{blob_name}` does not exist.")
-        downloaded_response = self.__blob_client(blob_name).download_blob()
-        return [downloaded_response.readall()]
+            raise BlobDoesNotExistError(f"blob `{blob_name}` does not exist.")
+        downloaded_response: StorageStreamDownloader = self.__blob_client(blob_name).download_blob()
+        return downloaded_response.readall()
         
     def publish(self, blob_name: str) -> str:
         if not self.does_exist(blob_name):
             raise Exception(f"blob `{blob_name}` does not exist.")
         raise NotImplementedError("It is not possible yet to define a public blob.")
-          
-    def delete(self, blob_name: str, recusrive: bool = True) -> None:
- 
-        blobs = list(self.__container_client().list_blob_names(name_starts_with=blob_name))
+
+    def _recursive_delete(self, blob_name: str):
+        blobs = list(self.__container_client().list_blobs(name_starts_with=blob_name))
         if not len(blobs):
-            raise Exception(f"No blob starts with `{blob_name}` does not exist.")
+            raise BlobDoesNotExistError(f"No blob starts with `{blob_name}` does not exist.")
         for blob in blobs:
-            self.__blob_client(blob).delete_blob()
+            self.__container_client().delete_blob(blob.name)
+
+    def delete(self, blob_name: str, recursive: bool = True) -> None:
+        if recursive:
+            self._recursive_delete(blob_name)
+        else:
+            if not self.does_exist(blob_name):
+                raise BlobDoesNotExistError(f"blob `{blob_name}` does not exist.")
+            self.__blob_client(blob_name).delete_blob()
