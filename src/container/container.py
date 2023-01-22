@@ -20,10 +20,6 @@ class Container(DataObject):
             raise ValueError("Missing parameter: AzureClient")
         self._storage_client = storage_client
 
-    # close the connection
-    def __del__(self):
-        self._storage_client.close_connection()
-
     def does_exist(self, container_name: str) -> bool:
         return self._storage_client.get_container_client(container_name).exists()
 
