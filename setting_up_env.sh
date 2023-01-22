@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # venv activation function
-# It does not display the venv but it works
-# Check with `which pip` command before and after the execution
 activate () {
-    source .venv/bin/activate
+    source venv/bin/activate
 }
 
 # Get the project directory
@@ -16,16 +14,15 @@ export PYTHONPATH="${PYTHONPATH}:${BASEDIR}/src/"
 
 # Copy the env variables file
 echo "Create the configuration file if it does not exist.."
+# Avoids overwriting the file if it exists
 cp -n .env.variables.sh env.variables.sh
 chmod +x env.variables.sh
 source env.variables.sh
 
-# Export the environment variables
-export VIRTUAL_ENV_DISABLE_PROMPT=0
-
 # venv Creation
 echo "Create the virutal environment.."
-python3 -m venv .venv
+export VIRTUAL_ENV_DISABLE_PROMPT=0
+python3 -m venv venv
 
 # venv Activation
 echo "Activate the virutal environment.."
