@@ -1,6 +1,7 @@
 import unittest
 import os
 import uuid
+import re
 
 from config.azure_client import AzureClient
 from blob.blob import Blob
@@ -53,6 +54,15 @@ class TestBlob(unittest.TestCase):
             data = f.read()
         return data
 
+    @staticmethod
+    def __is_azure_blob_url(url: str, container_name: str, blob_name: str):
+        """Check if the url is a standard blob url
+        The url must look like:
+        https://username.blob.core.windows.net/{container_name}/{_blob_name}
+        """
+        pattern: str = f"^(https://)(.+)(blob.core.windows.net/)({container_name})/({blob_name})"
+        return True if re.search(pattern, url) else False
+
     # SetUp and TearDown area
     # -----------------------------------------------------------------------
 
@@ -64,9 +74,11 @@ class TestBlob(unittest.TestCase):
         # Init the storage client and the container
         cls.__storage_client = AzureClient()
         cls.__container = Container(cls.__storage_client)
-        # Create the blob
+        # Create the container
         cls.__container_name = TestBlob.__get_prefixed_random_name("container")
         cls.__container.create(cls.__container_name)
+        # Set container access policy
+        cls.__container.set_container_public_read_access(cls.__container_name)
 
     # After all
     @classmethod
@@ -162,10 +174,25 @@ class TestBlob(unittest.TestCase):
             self.__blob.download(blob_name)
 
     def test_publish_object_nominal_case_object_published(self):
-        pass
+        # given
+        # refer to setUpClass and setUp()
+
+        # when
+        blob_url: str = self.__blob.publish(self.__blob_name)
+
+        # then
+        is_azure_blob_url: str = TestBlob.__is_azure_blob_url(blob_url, TestBlob.__container_name, self.__blob_name)
+        self.assertEqual(is_azure_blob_url, True)
 
     def test_publish_object_object_not_found_throw_exception(self):
-        pass
+        # given
+        # refer to setUpClass and setUp()
+        blob_name: str = f"{TestBlob.__get_prefixed_random_name('blob')}.txt"
+
+        # when
+        # then
+        with self.assertRaises(BlobDoesNotExistError):
+            self.__blob.publish(blob_name)
 
     # depends on test_does_exist_not_exists_false
     def test_delete_object_object_exists_object_deleted(self):
