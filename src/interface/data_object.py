@@ -1,37 +1,39 @@
-# -----------------------------------------------------------------------------------  
-# File   :   data_obect.py
-# Author :   Mélodie Ohan
-# Version:   20-12-2022 - original (dedicated to BI1)
-# Remarks:   There is no explicit interface implementation, no keyword interface in
-#            the current Python version.
-#            In order to "implement" iDataObject make your data object inherit 
-#            from this class.
-# -----------------------------------------------------------------------------------
-
 class DataObject:
     """DataObject interface
     
     All methods must be implemented in inheriting class.
+
+    Notes
+    ---
+    There is no explicit interface implementation, no keyword interface in the current Python version.
+    In order to "implement" DataObject, make your data object inherit from this class.
+
     """
 
     def does_exist(self, object_name: str) -> bool:
-        """Check if the data object exists in the distant storage"""
+        """Check if the data object exists in the distant storage
+
+        Args:
+            object_name: str       Data object name
+
+        """
         raise NotImplementedError("Not implemented!")
 
-    def create(self, object_name: str, local_file_path: str) -> None:
+    def create(self, object_name: str, local_file_path: str = None) -> None:
         """Create the data object in the distant storage
 
         Args:
             object_name: str       Data object name
-            local_file_path: str   Local path (if the objects is based on a file)
+            local_file_path: str   Optional, For cases where the object needs a local file path
 
         Raises: 
-            Exception: if the object already exists in distant storage
+            errors.DataObjectAlreadyExists
+
         """
         raise NotImplementedError("Not implemented!")
 
     def download(self, object_name: str) -> bytes:
-        """Return a list of object to download from the distant storage
+        """Return the bytes necessary to write the downloaded object
 
         Args:
             object_name: str       Data object name
@@ -40,8 +42,8 @@ class DataObject:
             A list that contain the bytes of the downloaded object
 
         Raises: 
-            Exception the data object name does not exists
-        
+            errors.DataObjectDoesNotExist
+
         """
         raise NotImplementedError("Not implemented!")
 
@@ -50,26 +52,26 @@ class DataObject:
 
         Args:
             object_name: str       Data object name (file.extension)
-            local_file_path: str   Local path (path + file.extension)
 
         Returns:
             str public link
         
         Raises: 
-            Exception the data object name does not exists
+            errors.DataObjectDoesNotExist
+
         """
         raise NotImplementedError("Not implemented!")
 
-    def delete(self, object_name: str, recursive: bool) -> None:
+    def delete(self, object_name: str, recursive: bool = False) -> None:
         """Delete the data object by its name. 
         Will delete recursively if the recursive parameter is true.
 
         Args:
             object_name: str     Data object name (file.extension)
-            recursive: bool      Delete recursively its content   
+            recursive: bool      (Optional) Indicate to recursively delete data object content
 
         Raises: 
-            Exception the data object name does not exists
+            errors.DataObjectDoesNotExist
+
         """
         raise NotImplementedError("Not implemented!")
-
