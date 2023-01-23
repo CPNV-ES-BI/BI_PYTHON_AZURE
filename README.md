@@ -57,7 +57,7 @@ The development environment requires the following:
 - Assign the environment variable `AZURE_STORAGE_CONNECTION_STRING`
 - Installing the library prerequisites in `requirements.txt`
 
-You can also refer to my development environment in the [wiki](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/BI_PYTHON_AZURE-Project#environment).
+You can also simply refer to my configuration with PyCharm [here](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/1-BI_PYTHON_AZURE-Project#configure-pycharm).
 
 #### Linux terminal environment
 
@@ -72,7 +72,6 @@ Then just set your connection string in `env.variables.sh`.
 
 #### Manual configuration (Linux/Windows)
 
-For the configuration of the IDE please refer to the Wiki.
 
 ##### Create the Virtual environment
 
@@ -212,7 +211,7 @@ docker run python-docker
 
 ## Contributing
 
-> Refer to the [branch strategy](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/BI_PYTHON_AZURE-Project#branches-strategy) and the [convention name](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/BI_PYTHON_AZURE-Project#convention-names).
+> Refer to the [branch strategy](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/1-BI_PYTHON_AZURE-Project#branches-strategy) and the [convention name](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/1-BI_PYTHON_AZURE-Project#convention-names).
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
