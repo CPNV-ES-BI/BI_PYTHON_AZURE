@@ -9,7 +9,6 @@ The goal of this project is to provide a microservice that allow interaction wit
 The microservice will have its own API that will allow interaction with its Data Object library.
 
 
-
 ## Table of Contents
 1. [Documentation](#documentation)
 2. [Setting up dev](#setting-up-dev)
@@ -80,7 +79,6 @@ Create a Python virtual environment in `BI_PYTHON_AZURE/`
 python3 -m venv venv
 ```
 
-1. Activate virtual environment 
 Activate the newly created virtual environment:
 For windows refer to the [official documentation](https://docs.python.org/3/library/venv.html#how-venvs-work)
 ```sh
@@ -168,8 +166,8 @@ docker run python-docker
 
 ```sh
 ├── doc                                     # Documentation directory
-│   ├── class_diagram.png
-│   └── class_diagram.puml
+│   ├── interface_class_diagram.png
+│   └── interface_class_diagram.puml
 ├── Dockerfile                              # DockerFile
 ├── env.variables.sh                        # Where is defined the value of AZURE_STORAGE_CONNECTION_STRING env
 ├── LICENSE     
