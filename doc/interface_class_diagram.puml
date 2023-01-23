@@ -10,7 +10,7 @@ endlegend
 title Class Diagram
   Interface IDataObject {
     + doesExist(objectName: string): bool
-    + create(objectName: string, localFilePath: string)
+    + create(objectName: string, localFilePath: string): void
     + download(objectName: string): byte[]
     + publish(objectName: string): string
     + delete(objectName: string, recursive = false: bool): void
