@@ -89,17 +89,20 @@ class TestBlobHelper(unittest.TestCase):
     # After all
     @classmethod
     def tearDownClass(cls):
+        # Delete the container (and all blob contained inside)
         if cls.__container_helper.does_exist(cls.__container_name):
             cls.__container_helper.delete(cls.__container_name)
 
     # Before each
     def setUp(self):
+        # Create the blob and upload a file
         self.__blob_name = f"{TestBlobHelper.__get_prefixed_random_name('blob')}.txt"
         self.__blob_helper = BlobHelper(TestBlobHelper.__storage_client, TestBlobHelper.__container_name)
         self.__blob_helper.create(self.__blob_name, TestBlobHelper.__test_file_path)
 
     # After each
     def tearDown(self):
+        # Delete the blob if it does exist
         if self.__blob_helper.does_exist(self.__blob_name):
             self.__blob_helper.delete(self.__blob_name, False)
 

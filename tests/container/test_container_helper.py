@@ -52,6 +52,7 @@ class TestContainerHelper(unittest.TestCase):
 
     # Before each
     def setUp(self):
+        # Init the storage client, the container helper and create the container
         storage_client = AzureClient()
         self.__container_name = TestContainerHelper.get_random_container_name()
         self.__container_helper = ContainerHelper(storage_client)
