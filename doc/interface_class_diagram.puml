@@ -1,4 +1,5 @@
 @startuml
+
 skinparam legendBackgroundColor #fff8db
 
 legend top right
@@ -15,3 +16,5 @@ title Class Diagram
     + publish(objectName: string): string
     + delete(objectName: string, recursive = false: bool): void
   }
+
+@enduml
