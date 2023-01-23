@@ -31,7 +31,7 @@ class TestContainerHelper(unittest.TestCase):
     @staticmethod
     def get_random_container_name() -> str:
         """ Return a unique name with 'container-' and 10 uuid char"""
-        # Use the first 15 characters and the last 15 characters of the UUID to limit collision in names
+        # Use the first 5 characters and the last 5 characters of the UUID to limit collision in names
         uuid_str = str(uuid.uuid4()).replace("-", "")
         return f"container-{uuid_str[:5] + uuid_str[-5:]}"
 
