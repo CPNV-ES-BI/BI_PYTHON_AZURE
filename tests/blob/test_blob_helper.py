@@ -85,8 +85,6 @@ class TestBlobHelper(unittest.TestCase):
         # Create the container
         cls.__container_name = TestBlobHelper.__get_prefixed_random_name("container")
         cls.__container_helper.create(cls.__container_name)
-        # Set container access policy
-        cls.__container_helper.set_container_public_read_access(cls.__container_name)
 
     # After all
     @classmethod
@@ -184,7 +182,8 @@ class TestBlobHelper(unittest.TestCase):
     def test_publish_object_nominal_case_object_published(self):
         # given
         # refer to setUpClass and setUp()
-
+        # Change temporarily the container access policy
+        TestBlobHelper.__container_helper.set_container_public_read_access(TestBlobHelper.__container_name)
         # when
         blob_url: str = self.__blob_helper.publish(self.__blob_name)
 
