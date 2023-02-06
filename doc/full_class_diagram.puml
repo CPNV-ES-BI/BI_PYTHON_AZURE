@@ -1,0 +1,130 @@
+@startuml
+
+skinparam legendBackgroundColor #fff8db
+
+legend top right
+    Project   BI_PYTHON_AZURE
+    Author    Mélodie Ohan
+    Version   23-01-2023
+endlegend
+
+title Class Diagram
+package interface {
+  Interface IDataObject {
+    + doesExist(objectName: string): bool
+    + create(objectName: string, localFilePath: string): void
+    + download(objectName: string): byte[]
+    + publish(objectName: string): string
+    + delete(objectName: string, recursive = false: bool): void
+  }
+  package interface.errors {
+    Class DataObjectError {
+    }
+  }
+}
+package config {
+  Class AzureClient {
+    - serviceClient: BlobServiceClient
+    + AzureClient()
+    + ~AzureClient()
+    + getBlobServiceClient(): BlobServiceClient
+    + getContainerClient(containerName: string): ContainerClient
+    + getBlobClient(containerName: string, blobName: string): BlobClient
+  }
+
+  Class AzureConfig {
+    - {static} connectionStringEnvKey: string
+    - connectionString: string
+    + AzureConfig()
+    + <get> connectionString(): string
+  }
+  AzureClient ..> AzureConfig
+}
+
+
+package blob {
+  Class BlobHelper {
+    - storageClient: AzureClient
+    - containerName: string
+    + BlobHelper(storageClient: AzureClient, containerName: string)
+    + doesExist(blobName: string): bool
+    + create(blobName: string, localFilePath: string): void
+    + download(blobName: string): byte[]
+    + publish(blobName: string): string
+    + delete(blobName: string, recursive: bool): void
+    # recursiveDelete(blob_name: string): void
+    - blobClient(blobName: string): BlobClient
+    - containerClient(containerName): ContainerClient
+  }
+  package blob.errors {
+    Class BlobHelperError {
+    }
+
+    Class BlobDoesNotExistError {
+    }
+
+    Class BlobAlreadyExistsError {
+    }
+  }
+
+  BlobHelper "throws"...> BlobDoesNotExistError
+  BlobHelper "throws"...> BlobAlreadyExistsError
+  BlobHelperError <|-- BlobDoesNotExistError
+  BlobHelperError <|-- BlobAlreadyExistsError
+}
+
+package container {
+  Class ContainerHelper {
+    - storageClient: AzureClient
+    + ContainerHelper(storageClient: AzureClient)
+    + doesExist(containerName: string): bool
+    + create(containerName: string, localFilePath: string)
+    + download(containerName: string): byte[]
+    + publish(containerName: string): string
+    + delete(containerName: string): void
+    + setContainerPublicAccess(containerName: string): void
+  }
+  package container.errors {
+    Class ContainerHelperError {
+    }
+
+    Class ContainerAlreadyExistsError {
+    }
+
+    Class ContainerDoesNotExistError {
+    }
+
+    Class ContainerForbiddenOperationError {
+    }
+  ContainerHelper "throws"...> ContainerAlreadyExistsError
+  ContainerHelper "throws"...> ContainerDoesNotExistError
+  ContainerHelper "throws"...> ContainerForbiddenOperationError
+  ContainerHelperError <|-- ContainerAlreadyExistsError
+  ContainerHelperError <|-- ContainerDoesNotExistError
+  ContainerHelperError <|-- ContainerForbiddenOperationError
+}
+
+IDataObject <|-- BlobHelper
+IDataObject <|-- ContainerHelper
+BlobHelper --> "1" AzureClient
+ContainerHelper --> "1" AzureClient
+
+@startuml
+skinparam legendBackgroundColor #fff8db
+
+legend top right
+    Project   BI_PYTHON_AZURE
+    Author    Mélodie Ohan
+    Version   22-01-2023
+endlegend
+
+title Class Diagram
+  Interface IDataObject {
+    + doesExist(objectName: string): bool
+    + create(objectName: string, localFilePath: string): void
+    + download(objectName: string): byte[]
+    + publish(objectName: string): string
+    + delete(objectName: string, recursive = false: bool): void
+  }
+
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+
+skinparam legendBackgroundColor #fff8db
+
+legend top right
+    Project   BI_PYTHON_AZURE
+    Author    Mélodie Ohan
+    Version   22-01-2023
+endlegend
+
+title Class Diagram
+  Interface IDataObject {
+    + doesExist(objectName: string): bool
+    + create(objectName: string, localFilePath: string): void
+    + download(objectName: string): byte[]
+    + publish(objectName: string): string
+    + delete(objectName: string, recursive = false: bool): void
+  }
+
+@enduml
