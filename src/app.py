@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------------
 # File   :   app.py
 # Author :   Mélodie Ohan
-# Version:   22-01-2022 - original (dedicated to BI1)
+# Version:   09-02-2022 - original (dedicated to BI1)
 # Remarks:   Entry point of the API on Flask Framework
 # -----------------------------------------------------------------------------------
 

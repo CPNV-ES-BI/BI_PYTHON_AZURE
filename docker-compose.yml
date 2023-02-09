@@ -1,0 +1,32 @@
+# ${PROJECT_NAME} is a project env. variables defined in .env
+version: '3.8'
+services:
+  production:
+    userns_mode: container
+    image: ${PROJECT_NAME}:production
+    container_name: ${PROJECT_NAME}-production
+    build:
+      target: production
+    ports:
+      - "5000:5000"
+    env_file:
+      - secret.settings.env
+  development:
+    userns_mode: container
+    image: ${PROJECT_NAME}:development
+    container_name: ${PROJECT_NAME}-development
+    build:
+
+      target: development
+    ports:
+      - "5000:5000"
+    env_file:
+      - secret.settings.env
+  tests:
+    userns_mode: container
+    image: ${PROJECT_NAME}:tests
+    container_name: ${PROJECT_NAME}-tests
+    build:
+      target: tests
+    env_file:
+      - secret.settings.env

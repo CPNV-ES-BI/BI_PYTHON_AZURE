@@ -409,5 +409,6 @@ env.variables.sh
 # Ignore .idea pycharm
 .idea
 
-
+# Ignore sensitive data
+secret.settings.env
 
