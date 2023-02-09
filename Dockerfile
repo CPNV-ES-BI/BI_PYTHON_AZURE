@@ -1,12 +1,56 @@
-# syntax=docker/dockerfile:1
+ARG BUILD_IMAGE=python:3.10.9-slim-buster
+ARG USER_NAME=bi_az
+ARG APP_WORKDIR=app
 
-FROM python:3.8-slim-buster
+# Build
+#-----------
+FROM ${BUILD_IMAGE} AS build
 
-WORKDIR /app
+ARG USER_NAME
+ARG APP_WORKDIR
 
+#RUN apt-get update && apt-get upgrade -y
+WORKDIR /$APP_WORKDIR
+# Sets utf-8 encoding for Python
+ENV LANG=C.UTF-8
+# Tells Python not to buffer the console output.
+ENV PYTHONUNBUFFERED=1
+# Create a user and its group
+RUN groupadd -g 513 $USER_NAME
+RUN useradd -g $USER_NAME -m -u 42065 $USER_NAME
+# Ensures that the python and pip executables used will be those from our virtualenv.
+ENV PATH="/venv/bin:$PATH"
+# Setup the virtualenv
+RUN python -m venv /venv
+# Install requirements
 COPY requirements.txt requirements.txt
-RUN cd & pip3 install -r requirements.txt
+RUN pip install -r requirements.txt
+# Copy project src directory
+COPY src src
+# Add src directory to PYTHONPATH to ease the command execution
+ENV PYTHONPATH "${PYTHONPATH}:src"
+# Expose port
+EXPOSE 5000
+# Make USER_NAME and its group owner of APP_WORKDIR
+RUN chown -R $USER_NAME:$USER_NAME /$APP_WORKDIR
 
-COPY ./src/ .
+# Production
+#-----------
+FROM build AS production
+USER $USER_NAME
+CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0"]
 
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+# Development
+#-----------
+FROM production AS development
+# Disables Python from writing bytecode files in order to reflect code changes without manual deletion of bytecode files
+ENV PYTHONDONTWRITEBYTECODE=1
+# Copy test directory
+COPY tests tests
+USER $USER_NAME
+CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0"]
+
+FROM development AS tests
+USER $USER_NAME
+CMD [ "python3", "-m" , "unittest", "discover", "-v"]
+
