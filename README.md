@@ -61,69 +61,15 @@ You can also simply refer to my configuration with PyCharm [here](https://github
 
 #### Linux terminal environment
 
-It is possible to configure its environment via the script `setting_up_env.sh` But its purpose will be to prepare the production environment.
-The library contained in `src` will be functional, but you will still have to configure your IDE with the points mentioned in the introduction of this section. 
-
-```shell
-source setting_up_env.sh
-``` 
-
-Then just set your connection string in `env.variables.sh`.
+ > Update in progress..
 
 #### Manual configuration (Linux/Windows)
 
-
-##### Create the Virtual environment
-
-Create a Python virtual environment in `BI_PYTHON_AZURE/` 
-```sh
-python3 -m venv venv
-```
-
-Activate the newly created virtual environment:
-For windows refer to the [official documentation](https://docs.python.org/3/library/venv.html#how-venvs-work)
-```sh
-source .venv/bin/activate
-```
-
-To deactivate an active virtual environment:
-```sh
- deactivate
-```
-
-##### Install the requirements
-
-```sh
-pip install -r requirements.txt
-```
-
-##### Set your connection string
-
-On Windows you have to create a new environment variable named `AZURE_STORAGE_CONNECTION_STRING`.
-You can refer to this [documentation](https://www.roelpeters.be/set-environment-variables-in-virtual-environment-python/).
-
-For linux rename `.env.variables.sh` to `env.variables.sh`
-In command line 
-```sh
-cp .env.variables.sh env.variables.sh
-``` 
-
-Then perform the following command to add this to your virtual environment.
-```sh
-source env.variables.sh
-```
-
+ > Update in progress..
+> 
 ### Run Unittests
 
-> Make sure to be at the root level of the project when you run these commands.
-
-#### Run all tests
-> 
-```shell
-python3 -m unittest discover
-```
-
-It is possible on Linux to launch all unit tests via the script  `run_tests.sh`
+ > Update in progress..
 
 ```sh
 ./run_unittests.sh
@@ -147,23 +93,14 @@ python3 tests/test_my_class.py TestMyClass.test_create_object_path_not_exists_ob
 
 ### Run
 
-> Not ready yet
-
-1. Activate virtual environment 
-```sh
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-2. Run docker
-
-```sh
-docker run python-docker
-```
+ > Update in progress..
 
 ##  Project directory structure
 
 > The `tests` directory must have the same structure as the objects tested in `src`
+
+> Update in progress..
+
 
 ```sh
 ├── doc                                     # Documentation directory
