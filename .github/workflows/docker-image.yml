@@ -1,0 +1,25 @@
+name: CI/CD pipeline
+
+on:
+  push:
+    branches: [ "develop", "main" ]
+  pull_request:
+    branches: [ "develop", "main" ]
+
+env:
+  CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up env file
+      run: |
+        echo "AZURE_STORAGE_CONNECTION_STRING=${{ env.CONNECTION_STRING }}" >> secret.settings.env
+    - name: Build
+      run: docker-compose build tests
+    - name: Run
+      run: docker-compose up tests
