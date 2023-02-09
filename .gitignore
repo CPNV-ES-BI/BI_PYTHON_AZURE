@@ -398,4 +398,17 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Ignore .venv
-.venv
+venv
+
+# Ignore python cache
+*.__pycache__
+
+# Ignore the connection string variable
+env.variables.sh
+
+# Ignore .idea pycharm
+.idea
+
+# Ignore sensitive data
+secret.settings.env
+
