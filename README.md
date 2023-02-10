@@ -25,6 +25,7 @@ The microservice will have its own API that will allow interaction with its Data
    4. [Docker (manual)](#docker--manual-)
 4. [Project directory structure](#project-directory-structure)
 5. [Contributing](#contributing)
+   1. [Pipeline](#pipeline)
 6. [License](#licence)
 
 
