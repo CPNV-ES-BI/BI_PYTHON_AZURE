@@ -204,51 +204,50 @@ docker run --env-file secret.settings.env bi_python_azure-tests:latest
 ```sh
 BI_PYTHON_AZURE                                 
 ├── act.secret.env
-├── doc                                         # Documentation, contains diagrams images and .puml
+├── doc                                     # Documentation, contains diagrams images and .puml
 │   ├── full_class_diagram.png
 │   ├── full_class_diagram.puml
 │   ├── interface_class_diagram.png
 │   └── interface_class_diagram.puml
-├── docker-compose.yml                          # Docker Compose configuration file 
-├── Dockerfile                                  # Script used to automate the creation of Docker images, container..
-├── example.settings.env                        # Example configuration file for secrets, This is where you set the project env variables.
+├── docker-compose.yml                      # Docker Compose configuration file 
+├── Dockerfile                              # Script to automate the creation of Docker images, container..
+├── example.settings.env                    # Example configuration file for secrets.
 ├── LICENSE                                     
 ├── README.md
 ├── requirements.txt
-├── src                                         # Project src directory
-│   ├── app.py                                      # Flask Framework entrypoint
-│   ├── blob                                        # Blob sub package, contains the helper that allows to interact with azure blob objects
-│   │   ├── blob_helper.py                              # BlobHelper module
-│   │   ├── errors                                      # Custom exceptions related to BlobHelper
+├── src                                     # Project src directory
+│   ├── app.py                              # Flask Framework entrypoint
+│   ├── blob                                # Blob sub package
+│   │   ├── blob_helper.py                    # BlobHelper module, allows to interact with azure blob objects
+│   │   ├── errors                            # Custom exceptions related to BlobHelper
 │   │   └── __init__.py
-│   ├── config                                  # Configuration sub package
-│   │   ├── azure_client.py                         # AzureClient module: provides Azure clients, depends on AzureConfig module
-│   │   ├── azure_config.py                         # AzureConfig module: get the local variable environment
+│   ├── config                              # Configuration sub package
+│   │   ├── azure_client.py                 # AzureClient module: provides Azure clients, depends on AzureConfig module
+│   │   ├── azure_config.py                 # AzureConfig module: get the local variable environment
 │   │   └── __init__.py
-│   ├── container                               # Container sub package, contains the helper that allows to interact with azure container objects
-│   │   ├── container_helper.py                         # ContainerHelper module
-│   │   ├── errors                                      # Custom exceptions related to ContainerHelper
+│   ├── container                           # Container sub package
+│   │   ├── container_helper.py               # ContainerHelper module, allows to interact with azure container objects
+│   │   ├── errors                            # Custom exceptions related to ContainerHelper
 │   │   └── __init__.py
 │   ├── __init__.py
-│   └── interface                               #  Contains Interface definition and top parent exception for data objects
-│       ├── data_object.py                              # "interface" implemented by BlobHelper and ContainerHelper modules
-│       ├── errors                                      # Contains the top parent exception for DataObject
+│   └── interface                           #  Contains Interface definition
+│       ├── data_object.py                    # "interface" implemented by BlobHelper and ContainerHelper modules
+│       ├── errors                            # Contains the top parent exception for DataObject
 │       └── __init__.py 
-└── tests                                       # Project tests directory
+└── tests                                   # Project tests directory
     ├── blob
-    │   ├── files                                   # Contains the files used in the test class. 
+    │   ├── files                             # Contains the files used in the test class. 
     │   ├── __init__.py
-    │   └── test_blob_helper.py                         # TestBlobHelper module
+    │   └── test_blob_helper.py               # TestBlobHelper module
     ├── container   
     │   ├── __init__.py
-    │   └── test_container_helper.py                    # TestContainerHelper module
+    │   └── test_container_helper.py          # TestContainerHelper module
     └── __init__.py
 ``` 
 
 ## Contributing
 
 > Refer to the [branch strategy](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/1-BI_PYTHON_AZURE-Project#branches-strategy) and the [convention name](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/1-BI_PYTHON_AZURE-Project#convention-names).
-
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
@@ -264,7 +263,13 @@ If you have a suggestion that would make this better, please fork the repo and c
 > 
 > If these packages are specific to the development environment, please create a new one:
 > `pip3 freeze > requirements_dev.txt`
-> 
+
+### Pipeline
+
+During push and pull requests, a pipeline has been set up via GitHub actions. It is only when the tests passed with success that these operations are possible.
+
+Please refer to [pipeline wiki documentation](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/5-Pipeline)
+
 ## Licence
 
 Distributed under the MIT License. See LICENSE for more information.
