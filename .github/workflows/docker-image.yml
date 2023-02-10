@@ -1,4 +1,4 @@
-name: CI/CD pipeline
+name: BI Python Azure CI
 
 on:
   push:
