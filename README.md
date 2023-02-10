@@ -11,11 +11,27 @@ The microservice will have its own API that will allow interaction with its Data
 
 ## Table of Contents
 
+1. [Documentation](#documentation)
+2. [Setting up dev](#setting-up-dev)
+   1. [Requirements](#requirements)
+   2. [Clone repository](#clone-repository)
+   3. [Configuration](#configuration)
+   4. [Run the project](#run-the-project)
+   5. [Run the unit tests](#run-the-unit-tests)
+3. [Docker](#docker)
+   1. [Docker requirements](#docker-requirements)
+   2. [Docker compose](#docker-compose)
+   3. [Production](#production)
+   4. [Docker (manual)](#docker--manual-)
+4. [Project directory structure](#project-directory-structure)
+5. [Contributing](#contributing)
+6. [License](#licence)
 
 
 ## Documentation
 
-The official documentation can be found [here](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki).
+- The official documentation can be found [here](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki).
+- The list of issues can be found [here](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/Issues).
 
 ## Setting up dev
 
@@ -101,15 +117,15 @@ python3 -m unittest discover -k test_delete_object_object_containing_sub_objects
 ```
 
 ## Docker
-> The name of these container is defined by the env variable ${PROJECT_NAME} which is currently `bi_python_azure`.
-It is defined in `./.env` file.
+
+> You can refer to the [Docker Wiki documentation](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/4-Docker).
 
 The current project has 3 different containers implemented in the `Dockerfile`.
 - bi_python_azure:production reachable by the service `production`. It directly run the flask server.
 - bi_python_azure:development  reachable by the service `development`. By default it run the flask server but it is possible to run unit tests.
 - bi_python_azure:tests  reachable by the service `tests`. It directly run all tests.
 
-### Requirements
+### Docker requirements
 
 | Version                                                             |  Description  | 
 |---------------------------------------------------------------------|---|
@@ -157,7 +173,16 @@ Stop one services
 docker compose stop development
 ```
 
-### Docker
+### Production
+> When the Framework Rest will be implemented, it is with the published production container that we will interact.
+> For now here is how to launch the production image
+
+```shell
+docker compose build production
+docker compose up production
+```
+
+### Docker (manual)
 
 This section allows you to launch docker containers without using the Docker compose tool.
 Here is an example with `tests` container. It will directly execute all unit tests.
@@ -177,6 +202,47 @@ docker run --env-file secret.settings.env bi_python_azure-tests:latest
 
 
 ```sh
+BI_PYTHON_AZURE                                 
+├── act.secret.env
+├── doc                                         # Documentation, contains diagrams images and .puml
+│   ├── full_class_diagram.png
+│   ├── full_class_diagram.puml
+│   ├── interface_class_diagram.png
+│   └── interface_class_diagram.puml
+├── docker-compose.yml                          # Docker Compose configuration file 
+├── Dockerfile                                  # Script used to automate the creation of Docker images, container..
+├── example.settings.env                        # Example configuration file for secrets, This is where you set the project env variables.
+├── LICENSE                                     
+├── README.md
+├── requirements.txt
+├── src                                         # Project src directory
+│   ├── app.py                                      # Flask Framework entrypoint
+│   ├── blob                                        # Blob sub package, contains the helper that allows to interact with azure blob objects
+│   │   ├── blob_helper.py                              # BlobHelper module
+│   │   ├── errors                                      # Custom exceptions related to BlobHelper
+│   │   └── __init__.py
+│   ├── config                                  # Configuration sub package
+│   │   ├── azure_client.py                         # AzureClient module: provides Azure clients, depends on AzureConfig module
+│   │   ├── azure_config.py                         # AzureConfig module: get the local variable environment
+│   │   └── __init__.py
+│   ├── container                               # Container sub package, contains the helper that allows to interact with azure container objects
+│   │   ├── container_helper.py                         # ContainerHelper module
+│   │   ├── errors                                      # Custom exceptions related to ContainerHelper
+│   │   └── __init__.py
+│   ├── __init__.py
+│   └── interface                               #  Contains Interface definition and top parent exception for data objects
+│       ├── data_object.py                              # "interface" implemented by BlobHelper and ContainerHelper modules
+│       ├── errors                                      # Contains the top parent exception for DataObject
+│       └── __init__.py 
+└── tests                                       # Project tests directory
+    ├── blob
+    │   ├── files                                   # Contains the files used in the test class. 
+    │   ├── __init__.py
+    │   └── test_blob_helper.py                         # TestBlobHelper module
+    ├── container   
+    │   ├── __init__.py
+    │   └── test_container_helper.py                    # TestContainerHelper module
+    └── __init__.py
 ``` 
 
 ## Contributing
@@ -193,6 +259,12 @@ If you have a suggestion that would make this better, please fork the repo and c
 4. Push to the Branch (git push origin feature/amazing_feature)
 5. Open a Pull Request
 
+> If the changes in your branch involve the use of external python packages, please update the requirements:
+> `pip3 freeze > requirements.txt`
+> 
+> If these packages are specific to the development environment, please create a new one:
+> `pip3 freeze > requirements_dev.txt`
+> 
 ## Licence
 
 Distributed under the MIT License. See LICENSE for more information.
