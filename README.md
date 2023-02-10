@@ -10,20 +10,7 @@ The microservice will have its own API that will allow interaction with its Data
 
 
 ## Table of Contents
-1. [Documentation](#documentation)
-2. [Setting up dev](#setting-up-dev)
-    1. [Requirements](#requirements)
-    2. [Clone repository](#clone-repository)
-    3. [Configuration of the development environment](#configuration-of-the-development-environment)
-       1. [Linux terminal environment](#linux-terminal-environment)
-       2. [Manual configuration (Linux/Windows)](#manual-configuration--linuxwindows-)
-   4. [Run unittests](#run-unittests)
-3. [Docker](#docker)
-    1. [Run](#run)
-4. [Branches strategy](#branches-strategy)
-5. [Project directory structure](#project-directory-structure)
-6. [Contributing](#contributing)
-7. [Licence](#licence)
+
 
 
 ## Documentation
@@ -39,8 +26,7 @@ The official documentation can be found [here](https://github.com/CPNV-ES-BI/BI_
 | Python 3.10.7  | For code execution  |
 | pip 22.2  | Python package manager  |
 | virtualenv 20.16.3  | Python virtual environments tool|
-| Docker 20.10.22 | Set of PaaS  |
-
+ 
 
 ### Clone repository
 
@@ -50,100 +36,147 @@ cd BI_PYTHON_AZURE/
 git switch develop
 ```
 
-### Configuration of the development environment
+### Configuration
 
-The development environment requires the following:
+The development environment requires to:
+- Create the virtual environment
 - Add the `src` directory to the PYTHONPATH
-- Assign the environment variable `AZURE_STORAGE_CONNECTION_STRING`
+- Assign the environment variable
 - Installing the library prerequisites in `requirements.txt`
 
-You can also simply refer to my configuration with PyCharm [here](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/1-BI_PYTHON_AZURE-Project#configure-pycharm).
+> If you use the PyCharm IDE refer to this documentation and go to point 3 [here](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/1-BI_PYTHON_AZURE-Project#configure-pycharm).
 
-#### Linux terminal environment
-
- > Update in progress..
-
-#### Manual configuration (Linux/Windows)
-
- > Update in progress..
-> 
-### Run Unittests
-
- > Update in progress..
-
+1. Activate virtual environment 
 ```sh
-./run_unittests.sh
-``` 
-
-#### Run one test
-The framework for running unit tests is [unittests](https://docs.python.org/3.10/library/unittest.html).
-
-> This command will execute any test modules in the root of `tests` directory
-
-```sh
-python3 -m unittest discover tests/
+python3 -m venv .venv
+source .venv/bin/activate
 ```
 
-You can also run a single test this with the following command example:
-```sh
-python3 tests/test_my_class.py TestMyClass.test_create_object_path_not_exists_object_exists
+2. Add src to the `PYTHONPATH`
+```shell
+export PYTHONPATH="$PYTHONPATH:src"
+```
+
+2. Copy `example.settings.env` and name it `secret.settings.env`
+```shell
+cp -n example.settings.env secret.settings.env
+```
+
+4. Now set the environment variables
+> Currently, the project module only refer to `AZURE_STORAGE_CONNECTION_STRING`
+
+- `AZURE_STORAGE_CONNECTION_STRING`: is the Azure connection string
+- `REGION`: is the Azure environment which refers to a specific location where the service is deployed.
+- `CONTAINER`: is the main container on which the microservice will interact
+
+5. Install the requirements of this project (external Python packages) 
+```shell
+pip install -r requirements.txt 
+```
+
+### Run the project
+> At the moment the main Framework is not installed. It will be Flask RESTful.
+> It is possible to launch the flask project which should display "Hello World!
+```shell
+python3 -m flask run --host=0.0.0.0
+```
+
+### Run the unit tests
+> Make sure to launch them at the root of the project.
+
+Run all tests with this following command. The `-v` is for verbosity.
+It will retrieve all the tests in the project.
+```shell
+python3 -m unittest discover -v
+```
+
+Run a single test with the `-k`. It will run all the tests that match the specified pattern.
+> For now, if tests have the same name, they will both be run by this command.
+> 
+> The correct syntax to run one test with the Framework Unittest is:
+> `python -m unittest my_module.TestMyClass.test_my_function`
+> but for the moment it is not functional
+```shell
+python3 -m unittest discover -k test_delete_object_object_containing_sub_objects_exists_object_deleted_recursively -v
 ```
 
 ## Docker
+> The name of these container is defined by the env variable ${PROJECT_NAME} which is currently `bi_python_azure`.
+It is defined in `./.env` file.
 
-### Run
+The current project has 3 different containers implemented in the `Dockerfile`.
+- bi_python_azure:production reachable by the service `production`. It directly run the flask server.
+- bi_python_azure:development  reachable by the service `development`. By default it run the flask server but it is possible to run unit tests.
+- bi_python_azure:tests  reachable by the service `tests`. It directly run all tests.
 
- > Update in progress..
+### Requirements
+
+| Version                                                             |  Description  | 
+|---------------------------------------------------------------------|---|
+| [Docker 23.0.0](https://docs.docker.com/engine/install/ubuntu/)     | Set of PaaS   |
+| [Docker Compose V2](https://docs.docker.com/compose/install/linux/) | tool for deploying Docker containers  |
+
+
+### Docker compose
+> Make sure to execute these command from the root directory of this project
+
+1. Build a service (it could be `production`, `development` or `tests`)
+```shell
+docker compose build development
+```
+2. Start the service
+
+```shell
+docker compose up development
+```
+Or use `-d` argument to run the service in the background. this will launch the service in the background.
+```shell
+docker compose up development -d
+```
+
+3. Execute any tests command
+> The production service **CANNOT** run tests.
+> 
+> Please refer to this [section](#run-the-unit-tests) about tests commands outputs
+Run all tests
+```shell
+docker compose exec development python3 -m unittest discover -v
+```
+Run a single test
+```shell
+docker compose exec development python3 -m unittest discover -k test_delete_object_object_containing_sub_objects_exists_object_deleted_recursively -v
+```
+
+4. Stop service
+Stop all services
+```shell
+docker compose stop
+```
+Stop one services
+```shell
+docker compose stop development
+```
+
+### Docker
+
+This section allows you to launch docker containers without using the Docker compose tool.
+Here is an example with `tests` container. It will directly execute all unit tests.
+
+1. Build
+```shell
+docker build . --tag bi_python_azure --file Dockerfile --target tests
+```
+2. Run
+```shell
+docker run --env-file secret.settings.env bi_python_azure-tests:latest
+```
 
 ##  Project directory structure
 
 > The `tests` directory must have the same structure as the objects tested in `src`
 
-> Update in progress..
-
 
 ```sh
-├── doc                                     # Documentation directory
-│   ├── interface_class_diagram.png
-│   └── interface_class_diagram.puml
-├── Dockerfile                              # DockerFile
-├── env.variables.sh                        # Where is defined the value of AZURE_STORAGE_CONNECTION_STRING env
-├── LICENSE     
-├── README.md
-├── requirements.txt                        # Contains the required external python modules 
-├── run_tests.sh                            # Run tests script
-├── setting_up_env.sh                       # Script for the production environnment
-│
-├── src                                     # Library src directory
-│   ├── app.py
-│   ├── blob                                # Contains the blob_helper module
-│   │   ├── blob_helper.py                  
-│   │   ├── errors                              # Contains blob_helper custom exception classes
-│   │   ├── __init__.py
-│   ├── config                              # Configuration module
-│   │   ├── azure_client.py                     # This class provides required Azure Client
-│   │   ├── azure_config.py                     # This class get the local variable environment
-│   │   ├── __init__.py
-│   ├── container                           # Contains the container_helper module
-│   │   ├── container_helper.py                 
-│   │   ├── errors                              # Contains container_helper custom exception classes
-│   │   ├── __init__.py
-│   ├── __init__.py
-│   └─── interface
-│       ├── data_object.py
-│       ├── errors
-│       └─── __init__.py
-│  
-├── tests                                   # Unittests test directory
-│   ├── blob
-│   │   ├── files                          
-│   │   ├── __init__.py
-│   │   └── test_blob_helper.py
-│   ├── container
-│   │   ├── __init__.py
-│   │   └── test_container_helper.py
-│   └─── __init__.py
-
 ``` 
 
 ## Contributing
