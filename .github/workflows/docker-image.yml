@@ -21,6 +21,6 @@ jobs:
         touch secret.settings.env
         echo "AZURE_STORAGE_CONNECTION_STRING=${{ env.CONNECTION_STRING }}" >> secret.settings.env
     - name: Build tests container
-      run: docker compose build tests
+      run: docker build . --tag bi_python_azure-tests --file Dockerfile --target tests
     - name: Run tests
-      run: docker compose up tests
+      run: docker run --env-file secret.settings.env bi_python_azure-tests:latest
