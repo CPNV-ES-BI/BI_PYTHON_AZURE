@@ -267,7 +267,7 @@ If you have a suggestion that would make this better, please fork the repo and c
 
 ### Pipeline
 
-During push and pull requests, a pipeline has been set up via GitHub actions. It is only when the tests passed with success that these operations are possible.
+During push and pull requests, a pipeline CI has been set up via GitHub actions. It is only when the tests passed with success that these operations are possible.
 
 Please refer to [pipeline wiki documentation](https://github.com/CPNV-ES-BI/BI_PYTHON_AZURE/wiki/5-Pipeline)
 
