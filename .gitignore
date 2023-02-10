@@ -412,3 +412,5 @@ env.variables.sh
 # Ignore sensitive data
 secret.settings.env
 
+# Ignore test secret
+act.secret.env
