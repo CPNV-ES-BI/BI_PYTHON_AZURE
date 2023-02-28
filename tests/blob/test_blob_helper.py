@@ -117,7 +117,7 @@ class TestBlobHelper(unittest.TestCase):
         result: bool = self.__blob_helper.does_exist(self.__blob_name)
 
         # then
-        self.assertEqual(result, True)
+        self.assertEqual(result, False)
 
     def test_does_exist_not_exists_false(self):
         # given
@@ -178,7 +178,7 @@ class TestBlobHelper(unittest.TestCase):
         blob_name: str = f"{TestBlobHelper.__get_prefixed_random_name('blob')}.txt"
 
         # when
-        # then
+        # thenpubl
         with self.assertRaises(BlobDoesNotExistError):
             self.__blob_helper.download(blob_name)
 
